@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowRight, Wind, Zap, Shield, Users, CheckCircle, Cloud, Navigation } from 'lucide-react'
+import { ArrowRight, Wind, Zap, Shield, CheckCircle, Cloud, Navigation } from 'lucide-react'
 
 export function Home() {
   const features = [

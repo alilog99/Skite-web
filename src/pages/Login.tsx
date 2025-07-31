@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Eye, EyeOff, Mail, Lock, Wind } from 'lucide-react'
+import { signInWithEmailAndPassword, ensureUserDocument } from '../services/firebase'
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -16,25 +17,42 @@ export function Login() {
     setIsLoading(true)
     setError('')
 
-    // Mock validation
+    // Basic validation
     if (!email || !password) {
       setError('Please fill in all fields')
       setIsLoading(false)
       return
     }
 
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters')
-      setIsLoading(false)
-      return
-    }
-
-    // Mock login delay
-    setTimeout(() => {
-      setIsLoading(false)
-      // Mock successful login - redirect to dashboard
+    try {
+      // Sign in with Firebase
+      const userCredential = await signInWithEmailAndPassword(email, password)
+      
+      // Ensure user document exists (for mobile app users)
+      await ensureUserDocument(userCredential.user.uid)
+      
+      // Successful login - redirect to dashboard
       navigate('/dashboard')
-    }, 1500)
+    } catch (error: any) {
+      console.error('Login error:', error)
+      
+      // Handle specific Firebase auth errors
+      let errorMessage = 'An error occurred during sign in'
+      
+      if (error.code === 'auth/user-not-found') {
+        errorMessage = 'No account found with this email address'
+      } else if (error.code === 'auth/wrong-password') {
+        errorMessage = 'Incorrect password'
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Please enter a valid email address'
+      } else if (error.code === 'auth/too-many-requests') {
+        errorMessage = 'Too many failed attempts. Please try again later'
+      }
+      
+      setError(errorMessage)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (

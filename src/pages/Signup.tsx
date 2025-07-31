@@ -2,14 +2,17 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Eye, EyeOff, Mail, Lock, User, Wind, Scale, Award } from 'lucide-react'
+import { signUpWithEmailAndPassword, handleExistingUserSignup } from '../services/firebase'
 
 export function Signup() {
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
     password: '',
     confirmPassword: '',
     weight: '',
-    experienceLevel: 'beginner'
+    experienceLevel: 'beginner',
+    termsAndConditions: false
   })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -28,6 +31,12 @@ export function Signup() {
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
+
+    if (!formData.name.trim()) {
+      newErrors.name = 'Full name is required'
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters'
+    }
 
     if (!formData.email) {
       newErrors.email = 'Email is required'
@@ -51,6 +60,10 @@ export function Signup() {
       newErrors.weight = 'Please enter a valid weight (30-200 kg)'
     }
 
+    if (!formData.termsAndConditions) {
+      newErrors.termsAndConditions = 'You must accept the terms and conditions'
+    }
+
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -64,12 +77,58 @@ export function Signup() {
 
     setIsLoading(true)
 
-    // Mock signup delay
-    setTimeout(() => {
-      setIsLoading(false)
-      // Mock successful signup - redirect to dashboard
+    try {
+      // First, check if user already exists
+      const existingUserCheck = await handleExistingUserSignup(formData.email, formData.password)
+      
+      if (existingUserCheck.shouldLogin) {
+        // User exists - suggest login instead
+        setErrors({ 
+          general: existingUserCheck.message + ' Click "Sign in" below to log in with your existing account.' 
+        })
+        return
+      }
+
+      // Create user data object for Firestore
+      const userData = {
+        fullName: formData.name,
+        email: formData.email,
+        weight: formData.weight,
+        experienceLevel: formData.experienceLevel,
+        termsAndConditions: formData.termsAndConditions,
+        credits: 0 // Initialize credits
+      }
+
+      // Sign up with Firebase
+      const result = await signUpWithEmailAndPassword(
+        formData.email,
+        formData.password,
+        userData
+      )
+
+      console.log('User created successfully:', result.userCredential.user.uid)
+      console.log('Is new user:', result.isNewUser)
+      
+      // Auto-login user and navigate to dashboard
       navigate('/dashboard')
-    }, 2000)
+    } catch (error: any) {
+      console.error('Signup error:', error)
+      
+      // Handle specific Firebase auth errors
+      let errorMessage = 'An error occurred during signup'
+      
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = 'An account with this email already exists. Please sign in instead.'
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = 'Password should be at least 6 characters'
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Please enter a valid email address'
+      }
+      
+      setErrors({ general: errorMessage })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -106,6 +165,34 @@ export function Signup() {
           className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8"
         >
           <form onSubmit={handleSignup} className="space-y-6">
+            {/* Name Field */}
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Full Name
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <User className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  autoComplete="name"
+                  required
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors ${
+                    errors.name ? 'border-red-300 dark:border-red-600' : 'border-gray-300 dark:border-gray-600'
+                  }`}
+                  placeholder="Enter your full name"
+                />
+              </div>
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-600 dark:text-red-400">{errors.name}</p>
+              )}
+            </div>
+
             {/* Email Field */}
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -271,6 +358,42 @@ export function Signup() {
                 </div>
               </div>
             </div>
+
+            {/* Terms and Conditions */}
+            <div className="flex items-start">
+              <div className="flex items-center h-5">
+                <input
+                  id="termsAndConditions"
+                  name="termsAndConditions"
+                  type="checkbox"
+                  checked={formData.termsAndConditions}
+                  onChange={(e) => setFormData(prev => ({ ...prev, termsAndConditions: e.target.checked }))}
+                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                />
+              </div>
+              <div className="ml-3 text-sm">
+                <label htmlFor="termsAndConditions" className="text-gray-700 dark:text-gray-300">
+                  I agree to the{' '}
+                  <a href="#" className="text-primary-600 hover:text-primary-500 dark:text-primary-400">
+                    Terms and Conditions
+                  </a>{' '}
+                  and{' '}
+                  <a href="#" className="text-primary-600 hover:text-primary-500 dark:text-primary-400">
+                    Privacy Policy
+                  </a>
+                </label>
+              </div>
+            </div>
+            {errors.termsAndConditions && (
+              <p className="text-sm text-red-600 dark:text-red-400">{errors.termsAndConditions}</p>
+            )}
+
+            {/* General Error Message */}
+            {errors.general && (
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                <p className="text-sm text-red-600 dark:text-red-400">{errors.general}</p>
+              </div>
+            )}
 
             {/* Submit Button */}
             <button

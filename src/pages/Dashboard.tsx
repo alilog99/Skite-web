@@ -1,29 +1,33 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { 
   User, 
-  CreditCard, 
   Settings, 
   LogOut, 
   Crown, 
-  Users, 
   BarChart3,
-  Download,
-  Upload,
   Shield,
   Wind,
   Cloud,
   MapPin,
-  Calendar
+  Calendar,
+  Zap,
+  Plus
 } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
+import { signOutUser } from '../services/firebase'
 
 export function Dashboard() {
   const [activeTab, setActiveTab] = useState('overview')
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const navigate = useNavigate()
+  const { currentUser, userData } = useAuth()
 
-  // Mock user data - replace with Firebase auth
+  // Use real user data from Firebase
   const user = {
-    name: 'Alex Rodriguez',
-    email: 'alex@example.com',
+    name: userData?.fullName || currentUser?.displayName || 'User',
+    email: currentUser?.email || userData?.email || 'user@example.com',
     plan: 'Pro',
     planStatus: 'active',
     nextBilling: '2024-02-15',
@@ -34,14 +38,33 @@ export function Dashboard() {
     }
   }
 
+  const handleLogout = async () => {
+    setIsLoggingOut(true)
+    try {
+      await signOutUser()
+      navigate('/')
+    } catch (error) {
+      console.error('Logout error:', error)
+    } finally {
+      setIsLoggingOut(false)
+    }
+  }
+
   const tabs = [
     { id: 'overview', name: 'Overview', icon: BarChart3 },
+    { id: 'credits', name: 'Credits', icon: Zap },
     { id: 'subscription', name: 'Subscription', icon: Crown },
     { id: 'profile', name: 'Rider Profile', icon: User },
     { id: 'settings', name: 'Settings', icon: Settings }
   ]
 
   const stats = [
+    {
+      label: 'Available Credits',
+      value: userData?.credits || 0,
+      icon: Zap,
+      color: 'text-yellow-600'
+    },
     {
       label: 'Forecasts This Month',
       value: user.usage.forecasts,
@@ -59,12 +82,6 @@ export function Dashboard() {
       value: user.usage.locations,
       icon: MapPin,
       color: 'text-purple-600'
-    },
-    {
-      label: 'Safety Score',
-      value: '95%',
-      icon: Shield,
-      color: 'text-green-600'
     }
   ]
 
@@ -94,9 +111,17 @@ export function Dashboard() {
                   {user.plan} Plan
                 </span>
               </div>
-              <button className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors">
-                <LogOut className="w-5 h-5" />
-                <span>Logout</span>
+              <button 
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoggingOut ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-gray-600"></div>
+                ) : (
+                  <LogOut className="w-5 h-5" />
+                )}
+                <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
               </button>
             </div>
           </div>
@@ -218,6 +243,105 @@ export function Dashboard() {
                       </div>
                     </button>
                   </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'credits' && (
+            <div className="space-y-8">
+              <div className="card">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">
+                  Your Credits
+                </h3>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <div className="flex items-center space-x-3 mb-4">
+                      <Zap className="w-8 h-8 text-yellow-500" />
+                      <div>
+                        <h4 className="text-xl font-semibold text-gray-900 dark:text-white">
+                          {userData?.credits || 0} Credits Available
+                        </h4>
+                        <p className="text-gray-600 dark:text-gray-300">
+                          Use credits to get personalized kite recommendations
+                        </p>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <button 
+                        onClick={() => window.location.href = '/pricing'}
+                        className="w-full btn-primary"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Buy More Credits
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 dark:text-white mb-3">
+                      How Credits Work
+                    </h4>
+                    <ul className="space-y-2">
+                      <li className="flex items-center text-gray-600 dark:text-gray-300">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                        1 credit = 1 kite recommendation
+                      </li>
+                      <li className="flex items-center text-gray-600 dark:text-gray-300">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                        Credits never expire
+                      </li>
+                      <li className="flex items-center text-gray-600 dark:text-gray-300">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                        Personalized for your conditions
+                      </li>
+                      <li className="flex items-center text-gray-600 dark:text-gray-300">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+                        Instant recommendations
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  Recent Credit Usage
+                </h3>
+                <div className="space-y-4">
+                  {userData?.credits === 0 ? (
+                    <p className="text-gray-600 dark:text-gray-300 text-center py-4">
+                      No credits used yet. Purchase credits to get started!
+                    </p>
+                  ) : (
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between py-2">
+                        <div>
+                          <span className="text-gray-700 dark:text-gray-300">
+                            Kite recommendation for Maui Bay
+                          </span>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            18 knots, 75kg rider
+                          </p>
+                        </div>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                          2 days ago
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between py-2">
+                        <div>
+                          <span className="text-gray-700 dark:text-gray-300">
+                            Kite recommendation for Kailua Beach
+                          </span>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            15 knots, 75kg rider
+                          </p>
+                        </div>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                          1 week ago
+                        </span>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

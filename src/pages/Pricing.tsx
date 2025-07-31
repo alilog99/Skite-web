@@ -1,71 +1,54 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Check, X, Star, ArrowRight } from 'lucide-react'
+import { Check, Star, ArrowRight, Zap, ShoppingCart, Loader2 } from 'lucide-react'
+import { useAuth } from '../contexts/AuthContext'
+import { CREDIT_BUNDLES, redirectToCheckout, CreditBundle, verifyPayment } from '../services/stripe'
+import { Toast } from '../components/Toast'
 
 export function Pricing() {
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly')
+  const { currentUser, userData, refreshUserData } = useAuth()
+  const navigate = useNavigate()
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [selectedBundle, setSelectedBundle] = useState<CreditBundle | null>(null)
+  const [showToast, setShowToast] = useState(false)
+  const [toastMessage, setToastMessage] = useState('')
+  const [toastType, setToastType] = useState<'success' | 'error'>('success')
 
-  const plans = [
-    {
-      name: 'Free',
-      price: { monthly: 0, yearly: 0 },
-      description: 'Perfect for getting started',
-      features: [
-        '5 forecast requests/day',
-        'Limited locations',
-        'No profile history',
-        'Community support'
-      ],
-      notIncluded: [
-        'Unlimited forecasts',
-        'All locations',
-        'Profile history',
-        'Priority support'
-      ],
-      popular: false,
-      cta: 'Get Started Free'
-    },
-    {
-      name: 'Pro',
-      price: { monthly: 9, yearly: 90 },
-      description: 'For serious riders and enthusiasts',
-      features: [
-        'Unlimited forecasts',
-        'All locations',
-        'Save multiple profiles',
-        'Priority support',
-        'Advanced weather data',
-        'Offline mode',
-        'Custom alerts'
-      ],
-      notIncluded: [
-        'Team features',
-        'Admin dashboard'
-      ],
-      popular: true,
-      cta: 'Start Pro Trial'
-    },
-    {
-      name: 'Team',
-      price: { monthly: 25, yearly: 250 },
-      description: 'For schools and teams',
-      features: [
-        'Everything in Pro',
-        'Team usage (multi-user access)',
-        'Admin dashboard',
-        'Usage analytics',
-        'Instructor tools',
-        'Student management',
-        'Safety reporting'
-      ],
-      notIncluded: [],
-      popular: false,
-      cta: 'Start Team Trial'
+  // Check for successful payment on page load
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const sessionId = urlParams.get('session_id')
+    const success = urlParams.get('success')
+
+    if (sessionId && success === 'true') {
+      // Verify the payment with our backend
+      setTimeout(async () => {
+        try {
+          const isPaymentSuccessful = await verifyPayment(sessionId)
+          if (isPaymentSuccessful) {
+            await refreshUserData()
+            setToastMessage('Payment successful! Credits have been added to your account.')
+            setToastType('success')
+            setShowToast(true)
+          } else {
+            setToastMessage('Payment verification failed. Please contact support if credits were not added.')
+            setToastType('error')
+            setShowToast(true)
+          }
+        } catch (error) {
+          console.error('Error verifying payment:', error)
+          setToastMessage('Payment verification failed. Please contact support if credits were not added.')
+          setToastType('error')
+          setShowToast(true)
+        }
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname)
+      }, 1000)
     }
-  ]
+  }, [refreshUserData])
 
-  const savings = billingCycle === 'yearly' ? 17 : 0
+
 
   return (
     <div className="min-h-screen">
@@ -78,121 +61,197 @@ export function Pricing() {
             transition={{ duration: 0.6 }}
           >
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-              Simple, Transparent
-              <span className="text-primary-600 dark:text-primary-400"> Pricing</span>
+              Kite Recommendation
+              <span className="text-primary-600 dark:text-primary-400"> Credits</span>
             </h1>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
-              Choose the plan that fits your riding needs. All plans include a 14-day free trial. 
-              No credit card required to start.
+              Purchase credits to get personalized kite recommendations based on your conditions and experience level. 
+              No subscription required - pay only for what you need.
             </p>
-
-            {/* Billing Toggle */}
-            <div className="flex items-center justify-center space-x-4 mb-8">
-              <span className={`text-sm font-medium ${billingCycle === 'monthly' ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}>
-                Monthly
-              </span>
-              <button
-                onClick={() => setBillingCycle(billingCycle === 'monthly' ? 'yearly' : 'monthly')}
-                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 ${
-                  billingCycle === 'yearly' ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'
-                }`}
-              >
-                <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                    billingCycle === 'yearly' ? 'translate-x-6' : 'translate-x-1'
-                  }`}
-                />
-              </button>
-              <span className={`text-sm font-medium ${billingCycle === 'yearly' ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}>
-                Yearly
-                {billingCycle === 'yearly' && (
-                  <span className="ml-2 inline-flex items-center rounded-full bg-green-100 dark:bg-green-900 px-2.5 py-0.5 text-xs font-medium text-green-800 dark:text-green-200">
-                    Save {savings}%
-                  </span>
-                )}
-              </span>
-            </div>
           </motion.div>
         </div>
       </section>
 
-      {/* Pricing Cards */}
-      <section className="section-padding -mt-16">
+
+
+      {/* Credit Bundles Section */}
+      <section className="section-padding bg-white dark:bg-gray-900 -mt-16">
         <div className="container-custom">
-          <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {plans.map((plan, index) => (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Kite Recommendation Credits
+            </h2>
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
+              Purchase credits to get personalized kite recommendations based on your conditions and experience level
+            </p>
+            
+            {/* Current Credits Display */}
+            {currentUser && (
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-6 mb-8 inline-block">
+                <div className="flex items-center justify-center space-x-3">
+                  <Zap className="w-8 h-8 text-yellow-500" />
+                  <div>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">Current Credits</p>
+                    <p className="text-3xl font-bold text-gray-900 dark:text-white">
+                      {userData?.credits || 0}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </motion.div>
+
+          {/* Credit Bundles Grid */}
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {CREDIT_BUNDLES.map((bundle, index) => (
               <motion.div
-                key={plan.name}
+                key={bundle.id}
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className={`relative ${plan.popular ? 'lg:scale-105' : ''}`}
+                viewport={{ once: true }}
+                className={`relative bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border ${
+                  bundle.popular ? 'ring-2 ring-primary-500' : 'border-gray-200 dark:border-gray-700'
+                }`}
               >
-                {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="inline-flex items-center rounded-full bg-primary-600 px-3 py-1 text-sm font-medium text-white">
-                      <Star className="w-4 h-4 mr-1" />
-                      Most Popular
-                    </span>
+                {bundle.popular && (
+                  <div className="absolute top-0 right-0 bg-primary-500 text-white px-3 py-1 text-sm font-medium rounded-bl-lg">
+                    <Star className="w-4 h-4 inline mr-1" />
+                    Popular
                   </div>
                 )}
                 
-                <div className={`card h-full ${plan.popular ? 'ring-2 ring-primary-500' : ''}`}>
-                  <div className="text-center mb-8">
-                    <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-                      {plan.name}
+                <div className="p-6">
+                  <div className="text-center mb-6">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                      {bundle.name}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-6">
-                      {plan.description}
-                    </p>
-                    <div className="mb-6">
-                      <span className="text-4xl font-bold text-gray-900 dark:text-white">
-                        ${plan.price[billingCycle]}
-                      </span>
-                      {plan.price[billingCycle] > 0 && (
-                        <span className="text-gray-500 dark:text-gray-400">
-                          /{billingCycle === 'monthly' ? 'month' : 'year'}
-                        </span>
-                      )}
+                    <div className="text-3xl font-bold text-primary-600 mb-2">
+                      ${bundle.price}
                     </div>
-                    <button className={`w-full py-3 px-6 rounded-lg font-medium transition-all duration-200 ${
-                      plan.popular 
-                        ? 'bg-primary-600 hover:bg-primary-700 text-white' 
-                        : 'bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-900 dark:text-white'
-                    }`}>
-                      {plan.cta}
-                    </button>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      {bundle.credits} kite recommendations
+                    </p>
                   </div>
 
-                  <div className="space-y-4">
-                    <h4 className="font-semibold text-gray-900 dark:text-white">What's included:</h4>
-                    <ul className="space-y-3">
-                      {plan.features.map((feature) => (
-                        <li key={feature} className="flex items-center">
-                          <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0" />
-                          <span className="text-gray-700 dark:text-gray-300">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="space-y-3 mb-6">
+                    <div className="flex items-center">
+                      <Check className="w-5 h-5 text-green-500 mr-3" />
+                      <span className="text-gray-700 dark:text-gray-300">
+                        Personalized recommendations
+                      </span>
+                    </div>
+                    <div className="flex items-center">
+                      <Check className="w-5 h-5 text-green-500 mr-3" />
+                      <span className="text-gray-700 dark:text-gray-300">
+                        Instant access
+                      </span>
+                    </div>
+                    <div className="flex items-center">
+                      <Check className="w-5 h-5 text-green-500 mr-3" />
+                      <span className="text-gray-700 dark:text-gray-300">
+                        No expiration
+                      </span>
+                    </div>
+                  </div>
 
-                    {plan.notIncluded.length > 0 && (
-                      <>
-                        <h4 className="font-semibold text-gray-900 dark:text-white mt-6">Not included:</h4>
-                        <ul className="space-y-3">
-                          {plan.notIncluded.map((feature) => (
-                            <li key={feature} className="flex items-center">
-                              <X className="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" />
-                              <span className="text-gray-500 dark:text-gray-400">{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </>
+                  <button
+                    onClick={() => {
+                      if (!currentUser) {
+                        navigate('/login')
+                        return
+                      }
+                      setIsProcessing(true)
+                      setSelectedBundle(bundle)
+                      redirectToCheckout(bundle, currentUser.uid, currentUser.email || '')
+                        .catch((error) => {
+                          console.error('Purchase error:', error)
+                          setToastMessage('Failed to process purchase. Please try again.')
+                          setToastType('error')
+                          setShowToast(true)
+                        })
+                        .finally(() => {
+                          setIsProcessing(false)
+                          setSelectedBundle(null)
+                        })
+                    }}
+                    disabled={isProcessing}
+                    className={`w-full py-3 px-4 rounded-lg font-medium transition-colors ${
+                      isProcessing && selectedBundle?.id === bundle.id
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : 'bg-primary-600 hover:bg-primary-700 text-white'
+                    }`}
+                  >
+                    {isProcessing && selectedBundle?.id === bundle.id ? (
+                      <div className="flex items-center justify-center">
+                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                        Processing...
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center">
+                        <ShoppingCart className="w-4 h-4 mr-2" />
+                        Buy Now
+                      </div>
                     )}
-                  </div>
+                  </button>
                 </div>
               </motion.div>
             ))}
           </div>
+
+          {/* How Credits Work */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            viewport={{ once: true }}
+            className="bg-gray-50 dark:bg-gray-800 rounded-xl p-8"
+          >
+            <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
+              How Credits Work
+            </h3>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="bg-primary-100 dark:bg-primary-900 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-primary-600 dark:text-primary-300 font-bold">1</span>
+                </div>
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  Purchase Credits
+                </h4>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Choose a credit bundle that fits your needs
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="bg-primary-100 dark:bg-primary-900 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-primary-600 dark:text-primary-300 font-bold">2</span>
+                </div>
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  Get Recommendations
+                </h4>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Use your credits to get personalized kite recommendations
+                </p>
+              </div>
+              <div className="text-center">
+                <div className="bg-primary-100 dark:bg-primary-900 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-primary-600 dark:text-primary-300 font-bold">3</span>
+                </div>
+                <h4 className="font-semibold text-gray-900 dark:text-white mb-2">
+                  Enjoy Kiting
+                </h4>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Hit the water with confidence using your perfect kite
+                </p>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -210,27 +269,35 @@ export function Pricing() {
               Frequently Asked Questions
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              Everything you need to know about S-Kite pricing and plans
+              Everything you need to know about kite recommendation credits
             </p>
           </motion.div>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {[
               {
-                question: 'Can I change my plan anytime?',
-                answer: 'Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.'
-              },
-              {
-                question: 'Is there a free trial?',
-                answer: 'Yes, all paid plans include a 14-day free trial. No credit card required to start.'
+                question: 'How do credits work?',
+                answer: 'Each credit gives you one personalized kite recommendation. Credits never expire and can be used anytime you need advice on kite size and setup.'
               },
               {
                 question: 'What payment methods do you accept?',
-                answer: 'We accept all major credit cards, PayPal, and Apple Pay for your convenience.'
+                answer: 'We accept all major credit cards, PayPal, and Apple Pay for secure, one-time payments. No subscription required.'
               },
               {
-                question: 'Can I cancel anytime?',
-                answer: 'Absolutely. You can cancel your subscription at any time with no cancellation fees.'
+                question: 'Do credits expire?',
+                answer: 'No, credits never expire! You can use them anytime, whether it\'s tomorrow or next year. They\'re yours to keep.'
+              },
+              {
+                question: 'How accurate are the recommendations?',
+                answer: 'Our recommendations are based on your weight, experience level, wind conditions, and location. We use advanced algorithms to ensure the best kite size for your session.'
+              },
+              {
+                question: 'Can I get a refund?',
+                answer: 'Credits are non-refundable once purchased, but they never expire so you can use them whenever you need them.'
+              },
+              {
+                question: 'Do I need to create an account?',
+                answer: 'Yes, you need to be logged in to purchase and use credits. This ensures your recommendations are personalized and your credits are safely stored.'
               }
             ].map((faq, index) => (
               <motion.div
@@ -263,18 +330,27 @@ export function Pricing() {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Ready to fly smarter?
+              Ready for perfect kite recommendations?
             </h2>
             <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of kitesurfers who trust S-Kite for safer, more informed sessions
+              Get personalized kite size advice based on your conditions and experience level
             </p>
-                                  <Link to="/signup" className="bg-white text-primary-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-all duration-200 inline-flex items-center">
-                        Start Free Trial
-                        <ArrowRight className="ml-2 w-5 h-5" />
-                      </Link>
+            <Link to="/signup" className="bg-white text-primary-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-all duration-200 inline-flex items-center">
+              Get Started
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Link>
           </motion.div>
         </div>
       </section>
+      
+      {/* Toast Notification */}
+      {showToast && (
+        <Toast
+          message={toastMessage}
+          type={toastType}
+          onClose={() => setShowToast(false)}
+        />
+      )}
     </div>
   )
 } 

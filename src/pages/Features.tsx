@@ -3,14 +3,11 @@ import {
   Wind, 
   Cloud, 
   Shield, 
-  Navigation, 
   Download, 
   Globe, 
-  User, 
   Settings,
   Star,
   Quote,
-  Zap,
   MapPin
 } from 'lucide-react'
 
