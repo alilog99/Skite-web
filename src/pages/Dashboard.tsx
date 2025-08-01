@@ -7,7 +7,6 @@ import {
   LogOut, 
   Crown, 
   BarChart3,
-  Shield,
   Wind,
   Cloud,
   MapPin,
