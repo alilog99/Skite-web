@@ -32,25 +32,44 @@ A modern, responsive website for the S-Kite mobile app - Smart Kite Assistant fo
 
 ### Prerequisites
 
-- Node.js 16+ 
+- Node.js 16+
 - npm or yarn
 
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <your-repo-url>
    cd skite-website
    ```
 
 2. **Install dependencies**
+
+   Using npm:
+
    ```bash
    npm install
    ```
 
+   Using yarn:
+
+   ```bash
+   yarn install
+   ```
+
 3. **Start the development server**
+
+   Using npm:
+
    ```bash
    npm run dev
+   ```
+
+   Using yarn:
+
+   ```bash
+   yarn dev
    ```
 
 4. **Open your browser**
@@ -58,8 +77,38 @@ A modern, responsive website for the S-Kite mobile app - Smart Kite Assistant fo
 
 ### Build for Production
 
+Using npm:
+
 ```bash
 npm run build
+```
+
+Using yarn:
+
+```bash
+yarn build
+```
+
+### Clean Scripts
+
+The project includes several clean scripts for different scenarios:
+
+**Clean npm cache and dependencies:**
+
+```bash
+npm run clean
+```
+
+**Clean yarn cache and dependencies:**
+
+```bash
+npm run clean:yarn
+```
+
+**Clean both npm and yarn cache:**
+
+```bash
+npm run clean:all
 ```
 
 The built files will be in the `dist` directory, ready for deployment.
@@ -85,6 +134,7 @@ src/
 ## 🎨 Design System
 
 ### Colors
+
 - **Primary**: Blue gradient (`#0ea5e9` to `#0284c7`)
 - **Gray**: Neutral grays for text and backgrounds
 - **Success**: Green for positive actions
@@ -92,10 +142,12 @@ src/
 - **Error**: Red for errors
 
 ### Typography
+
 - **Font**: Inter (Google Fonts)
 - **Weights**: 300, 400, 500, 600, 700
 
 ### Components
+
 - **Buttons**: Primary and secondary variants with hover effects
 - **Cards**: Consistent card design with shadows and borders
 - **Navigation**: Sticky header with mobile menu
@@ -173,10 +225,11 @@ This project is licensed under the MIT License.
 ## 🆘 Support
 
 For support or questions:
+
 - Create an issue in the repository
 - Contact the development team
 - Check the documentation
 
 ---
 
-Built with ❤️ for the S-Kite mobile app 
+Built with ❤️ for the S-Kite mobile app
