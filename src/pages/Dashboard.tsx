@@ -7,7 +7,6 @@ import {
   LogOut, 
   Crown, 
   BarChart3,
-  Shield,
   Wind,
   Cloud,
   MapPin,
@@ -53,7 +52,6 @@ export function Dashboard() {
   const tabs = [
     { id: 'overview', name: 'Overview', icon: BarChart3 },
     { id: 'credits', name: 'Credits', icon: Zap },
-    { id: 'subscription', name: 'Subscription', icon: Crown },
     { id: 'profile', name: 'Rider Profile', icon: User },
     { id: 'settings', name: 'Settings', icon: Settings }
   ]

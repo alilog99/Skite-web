@@ -1,7 +1,17 @@
 import { loadStripe } from '@stripe/stripe-js'
 
+// Dynamic Stripe key loading based on environment
+const getStripeKey = () => {
+  const mode = import.meta.env.VITE_STRIPE_MODE || 'test'
+  if (mode === 'live') {
+    return import.meta.env.VITE_STRIPE_LIVE_PUBLISHABLE_KEY || ''
+  } else {
+    return import.meta.env.VITE_STRIPE_TEST_PUBLISHABLE_KEY || ''
+  }
+}
+
 // Initialize Stripe
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '')
+const stripePromise = loadStripe(getStripeKey())
 
 // Credit bundle configurations
 export interface CreditBundle {
@@ -11,6 +21,14 @@ export interface CreditBundle {
   credits: number
   priceId: string // Stripe Price ID
   popular?: boolean
+  description: string
+}
+
+// Dynamic price ID loading based on environment
+const getPriceId = (bundleNumber: number) => {
+  const mode = import.meta.env.VITE_STRIPE_MODE || 'test'
+  const prefix = mode === 'live' ? 'VITE_STRIPE_LIVE_PRICE_ID_BUNDLE_' : 'VITE_STRIPE_TEST_PRICE_ID_BUNDLE_'
+  return import.meta.env[`${prefix}${bundleNumber}`] || ''
 }
 
 export const CREDIT_BUNDLES: CreditBundle[] = [
@@ -19,22 +37,25 @@ export const CREDIT_BUNDLES: CreditBundle[] = [
     name: 'Starter Pack',
     price: 1,
     credits: 3,
-    priceId: 'price_1OqX2X2X2X2X2X2X2X2X2X2X' // Replace with your actual Stripe Price ID
+    priceId: getPriceId(1),
+    description: 'Perfect for trying out kite recommendations'
   },
   {
     id: 'bundle-2',
     name: 'Popular Pack',
-    price: 2,
+    price: 3,
     credits: 10,
-    priceId: 'price_2OqX2X2X2X2X2X2X2X2X2X2X', // Replace with your actual Stripe Price ID
-    popular: true
+    priceId: getPriceId(2),
+    popular: true,
+    description: 'Most popular choice for regular users'
   },
   {
     id: 'bundle-3',
     name: 'Pro Pack',
     price: 5,
     credits: 25,
-    priceId: 'price_3OqX2X2X2X2X2X2X2X2X2X2X' // Replace with your actual Stripe Price ID
+    priceId: getPriceId(3),
+    description: 'Best value for power users'
   }
 ]
 
@@ -45,7 +66,8 @@ export const createCheckoutSession = async (
   userEmail: string
 ): Promise<string> => {
   try {
-    const response = await fetch('/api/create-checkout-session', {
+    // Use Firebase Functions endpoint
+    const response = await fetch('https://us-central1-skite-app.cloudfunctions.net/createCheckoutSession', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -55,12 +77,14 @@ export const createCheckoutSession = async (
         userId: userId,
         userEmail: userEmail,
         bundleId: bundle.id,
-        credits: bundle.credits
+        credits: bundle.credits,
+        bundleName: bundle.name
       }),
     })
 
     if (!response.ok) {
-      throw new Error('Failed to create checkout session')
+      const errorData = await response.json()
+      throw new Error(errorData.message || 'Failed to create checkout session')
     }
 
     const { sessionId } = await response.json()
@@ -101,7 +125,7 @@ export const redirectToCheckout = async (
 // Verify payment success
 export const verifyPayment = async (sessionId: string): Promise<boolean> => {
   try {
-    const response = await fetch('/api/verify-payment', {
+    const response = await fetch('https://us-central1-skite-app.cloudfunctions.net/verifyPayment', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -119,4 +143,14 @@ export const verifyPayment = async (sessionId: string): Promise<boolean> => {
     console.error('Error verifying payment:', error)
     return false
   }
+}
+
+// Get bundle by ID
+export const getBundleById = (bundleId: string): CreditBundle | undefined => {
+  return CREDIT_BUNDLES.find(bundle => bundle.id === bundleId)
+}
+
+// Get bundle by Price ID
+export const getBundleByPriceId = (priceId: string): CreditBundle | undefined => {
+  return CREDIT_BUNDLES.find(bundle => bundle.priceId === priceId)
 } 
