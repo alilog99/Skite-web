@@ -36,7 +36,7 @@ A modern, responsive website for the S-Kite mobile app - Smart Kite Assistant fo
 ### Prerequisites
 
 - Node.js 16+ 
-- npm or yarn
+- Yarn (recommended) or npm
 
 ### Installation
 
@@ -48,7 +48,7 @@ A modern, responsive website for the S-Kite mobile app - Smart Kite Assistant fo
 
 2. **Install dependencies**
    ```bash
-   npm install
+   yarn install
    ```
 
 3. **Set up environment**
@@ -62,7 +62,7 @@ A modern, responsive website for the S-Kite mobile app - Smart Kite Assistant fo
 
 4. **Start the development server**
    ```bash
-   npm run dev
+   yarn dev
    ```
 
 5. **Open your browser**
@@ -78,10 +78,31 @@ A modern, responsive website for the S-Kite mobile app - Smart Kite Assistant fo
 nano .env
 
 # Build the application
-npm run build
+yarn build
 ```
 
 The built files will be in the `dist` directory, ready for deployment.
+
+## 📦 Package Manager
+
+This project uses **Yarn** as the package manager. If you prefer to use npm, you can still do so, but we recommend using Yarn for consistency.
+
+### Yarn Commands:
+```bash
+yarn install    # Install dependencies
+yarn dev        # Start development server
+yarn build      # Build for production
+yarn start      # Start production server
+yarn add pkg    # Add a package
+yarn remove pkg # Remove a package
+```
+
+### Migration from npm:
+If you're migrating from npm, simply run:
+```bash
+rm package-lock.json
+yarn install
+```
 
 ## 🔧 Environment Management
 
@@ -110,6 +131,7 @@ Skite-web/
 ├── .env.live              # Live environment template
 ├── switch-env.sh          # Environment switching script
 ├── create-stripe-products.js # Stripe product creation utility
+├── yarn.lock              # Yarn lock file (dependency versions)
 └── ENVIRONMENT_SETUP.md   # Environment configuration guide
 ```
 
@@ -181,7 +203,7 @@ The website is designed to integrate with Firebase for:
 
 ### Netlify
 
-1. Build the project: `npm run build`
+1. Build the project: `yarn build`
 2. Upload the `dist` folder to Netlify
 3. Configure build settings if needed
 
