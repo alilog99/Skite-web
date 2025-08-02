@@ -43,31 +43,21 @@ backup_env() {
 switch_to_test() {
     print_status "Switching to TEST environment..."
     
+    # Check if template exists
+    if [ ! -f ".env.test" ]; then
+        print_error ".env.test template file not found!"
+        print_error "Please create .env.test with your test environment variables"
+        exit 1
+    fi
+    
     # Backup current .env
     backup_env
     
-    # Create test environment file
-    cat > .env << 'EOF'
-# Firebase Configuration
-VITE_FIREBASE_API_KEY=AIzaSyCRwZBXkC2b1cMH2VAcnSGSqqUtFWwh-yg
-VITE_FIREBASE_AUTH_DOMAIN=skite-app.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=skite-app
-VITE_FIREBASE_STORAGE_BUCKET=skite-app.firebasestorage.app
-VITE_FIREBASE_MESSAGING_SENDER_ID=347898821173
-VITE_FIREBASE_APP_ID=1:347898821173:web:a64976e482a16d43918f7c
-VITE_FIREBASE_MEASUREMENT_ID=G-SJ0P1F40WE
-
-# Stripe Configuration - TEST Mode
-VITE_STRIPE_MODE=test
-VITE_STRIPE_TEST_PUBLISHABLE_KEY=pk_test_51RqbnQFXWKfEvemG6KtMJfPsUwXvYG9cwJVjCOM1ubzZllaI1TrqcsYsVDjT5P6slg8HR65mIzY65Cpad0sFaDBF007F72jYn8
-
-# Stripe Test Price IDs
-VITE_STRIPE_TEST_PRICE_ID_BUNDLE_1=price_1RqckrFXWKfEvemGm5bfXri5
-VITE_STRIPE_TEST_PRICE_ID_BUNDLE_2=price_1RqclZFXWKfEvemGF1iltPvj
-VITE_STRIPE_TEST_PRICE_ID_BUNDLE_3=price_1RqcmSFXWKfEvemG52HgrenK
-EOF
-
+    # Copy template to .env
+    cp .env.test .env
+    
     print_status "✅ Switched to TEST environment"
+    print_warning "⚠️  Remember to fill in your actual test keys in .env"
     print_warning "Remember to restart your dev server: npm run dev"
 }
 
@@ -75,32 +65,22 @@ EOF
 switch_to_live() {
     print_status "Switching to LIVE environment..."
     
+    # Check if template exists
+    if [ ! -f ".env.live" ]; then
+        print_error ".env.live template file not found!"
+        print_error "Please create .env.live with your live environment variables"
+        exit 1
+    fi
+    
     # Backup current .env
     backup_env
     
-    # Create live environment file
-    cat > .env << 'EOF'
-# Firebase Configuration
-VITE_FIREBASE_API_KEY=AIzaSyCRwZBXkC2b1cMH2VAcnSGSqqUtFWwh-yg
-VITE_FIREBASE_AUTH_DOMAIN=skite-app.firebaseapp.com
-VITE_FIREBASE_PROJECT_ID=skite-app
-VITE_FIREBASE_STORAGE_BUCKET=skite-app.firebasestorage.app
-VITE_FIREBASE_MESSAGING_SENDER_ID=347898821173
-VITE_FIREBASE_APP_ID=1:347898821173:web:a64976e482a16d43918f7c
-VITE_FIREBASE_MEASUREMENT_ID=G-SJ0P1F40WE
-
-# Stripe Configuration - LIVE Mode
-VITE_STRIPE_MODE=live
-VITE_STRIPE_LIVE_PUBLISHABLE_KEY=pk_live_51RqbmjF3UT2qFDZwQQQ2AinVR3twvXHWgKmDJW0hQqbP3idedSqzZ4y714Y7iywbAwYAKSzWAm9cQNVIGK6L4DvB00U1lBP8U4
-
-# Stripe Live Price IDs
-VITE_STRIPE_LIVE_PRICE_ID_BUNDLE_1=price_1RqwrWF3UT2qFDZwOlThlOn2
-VITE_STRIPE_LIVE_PRICE_ID_BUNDLE_2=price_1RqwsoF3UT2qFDZwRKVHLQmh
-VITE_STRIPE_LIVE_PRICE_ID_BUNDLE_3=price_1RqwuqF3UT2qFDZwVDL56jKl
-EOF
-
+    # Copy template to .env
+    cp .env.live .env
+    
     print_status "✅ Switched to LIVE environment"
     print_warning "⚠️  LIVE mode uses real money! Be careful!"
+    print_warning "⚠️  Remember to fill in your actual live keys in .env"
     print_warning "Remember to restart your dev server: npm run dev"
 }
 
@@ -117,15 +97,39 @@ show_current() {
         fi
         
         echo ""
-        print_status "Current Stripe Key:"
-        if grep -q "pk_test_" .env; then
-            echo -e "${GREEN}  Test Key (Safe for development)${NC}"
+        print_status "Current Stripe Key Status:"
+        if grep -q "pk_test_your_test_publishable_key_here" .env; then
+            echo -e "${YELLOW}  ⚠️  Test Key (Placeholder - needs to be filled)${NC}"
+        elif grep -q "pk_live_your_live_publishable_key_here" .env; then
+            echo -e "${YELLOW}  ⚠️  Live Key (Placeholder - needs to be filled)${NC}"
+        elif grep -q "pk_test_" .env; then
+            echo -e "${GREEN}  ✅ Test Key (Configured)${NC}"
         elif grep -q "pk_live_" .env; then
-            echo -e "${RED}  Live Key (Real money transactions)${NC}"
+            echo -e "${RED}  ✅ Live Key (Configured - Real money)${NC}"
+        else
+            echo -e "${YELLOW}  ❓ Unknown Key Status${NC}"
         fi
     else
         print_error "No .env file found!"
+        print_status "Run './switch-env.sh test' or './switch-env.sh live' to create one"
     fi
+}
+
+# Function to validate environment
+validate_env() {
+    if [ ! -f ".env" ]; then
+        print_error "No .env file found!"
+        return 1
+    fi
+    
+    # Check for placeholder keys
+    if grep -q "your_.*_key_here" .env; then
+        print_warning "⚠️  Environment contains placeholder keys that need to be filled"
+        return 1
+    fi
+    
+    print_status "✅ Environment appears to be properly configured"
+    return 0
 }
 
 # Main script logic
@@ -142,13 +146,17 @@ main() {
         "current"|"status")
             show_current
             ;;
+        "validate")
+            validate_env
+            ;;
         *)
-            echo "Usage: $0 [test|live|current]"
+            echo "Usage: $0 [test|live|current|validate]"
             echo ""
             echo "Commands:"
-            echo "  test    - Switch to TEST environment (safe for development)"
-            echo "  live    - Switch to LIVE environment (real money transactions)"
-            echo "  current - Show current environment status"
+            echo "  test     - Switch to TEST environment (safe for development)"
+            echo "  live     - Switch to LIVE environment (real money transactions)"
+            echo "  current  - Show current environment status"
+            echo "  validate - Validate current environment configuration"
             echo ""
             show_current
             ;;

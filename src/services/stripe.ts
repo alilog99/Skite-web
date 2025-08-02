@@ -1,16 +1,44 @@
 import { loadStripe } from '@stripe/stripe-js'
+import dotenv from 'dotenv'
 
-// Dynamic Stripe key loading based on environment
-const getStripeKey = () => {
-  const mode = import.meta.env.VITE_STRIPE_MODE || 'test'
+// Load environment variables from .env file
+dotenv.config()
+
+// Validate that required environment variables are set
+const validateEnvironment = () => {
+  const mode = process.env.VITE_STRIPE_MODE || import.meta.env.VITE_STRIPE_MODE || 'test'
+  
   if (mode === 'live') {
-    return import.meta.env.VITE_STRIPE_LIVE_PUBLISHABLE_KEY || ''
+    if (!process.env.VITE_STRIPE_LIVE_PUBLISHABLE_KEY && !import.meta.env.VITE_STRIPE_LIVE_PUBLISHABLE_KEY) {
+      throw new Error('VITE_STRIPE_LIVE_PUBLISHABLE_KEY is required for live mode. Please check your .env file.')
+    }
   } else {
-    return import.meta.env.VITE_STRIPE_TEST_PUBLISHABLE_KEY || ''
+    if (!process.env.VITE_STRIPE_TEST_PUBLISHABLE_KEY && !import.meta.env.VITE_STRIPE_TEST_PUBLISHABLE_KEY) {
+      throw new Error('VITE_STRIPE_TEST_PUBLISHABLE_KEY is required for test mode. Please check your .env file.')
+    }
   }
 }
 
-// Initialize Stripe
+// Dynamic Stripe key loading based on environment
+const getStripeKey = () => {
+  const mode = process.env.VITE_STRIPE_MODE || import.meta.env.VITE_STRIPE_MODE || 'test'
+  if (mode === 'live') {
+    return process.env.VITE_STRIPE_LIVE_PUBLISHABLE_KEY || import.meta.env.VITE_STRIPE_LIVE_PUBLISHABLE_KEY || ''
+  } else {
+    return process.env.VITE_STRIPE_TEST_PUBLISHABLE_KEY || import.meta.env.VITE_STRIPE_TEST_PUBLISHABLE_KEY || ''
+  }
+}
+
+// Initialize Stripe with validation
+try {
+  validateEnvironment()
+} catch (error) {
+  const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+  console.error('Environment validation failed:', errorMessage)
+  console.error('Please run: ./switch-env.sh test or ./switch-env.sh live')
+  console.error('Then fill in your actual keys in the .env file')
+}
+
 const stripePromise = loadStripe(getStripeKey())
 
 // Credit bundle configurations
@@ -26,9 +54,9 @@ export interface CreditBundle {
 
 // Dynamic price ID loading based on environment
 const getPriceId = (bundleNumber: number) => {
-  const mode = import.meta.env.VITE_STRIPE_MODE || 'test'
+  const mode = process.env.VITE_STRIPE_MODE || import.meta.env.VITE_STRIPE_MODE || 'test'
   const prefix = mode === 'live' ? 'VITE_STRIPE_LIVE_PRICE_ID_BUNDLE_' : 'VITE_STRIPE_TEST_PRICE_ID_BUNDLE_'
-  return import.meta.env[`${prefix}${bundleNumber}`] || ''
+  return process.env[`${prefix}${bundleNumber}`] || import.meta.env[`${prefix}${bundleNumber}`] || ''
 }
 
 export const CREDIT_BUNDLES: CreditBundle[] = [
