@@ -1,18 +1,58 @@
 import { loadStripe } from "@stripe/stripe-js";
 
-// Initialize Stripe
-const stripePromise = loadStripe(
-  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || ""
-);
+// Validate that required environment variables are set
+const validateEnvironment = () => {
+  const mode = import.meta.env.VITE_STRIPE_MODE || 'test'
+  
+  if (mode === 'live') {
+    if (!import.meta.env.VITE_STRIPE_LIVE_PUBLISHABLE_KEY) {
+      throw new Error('VITE_STRIPE_LIVE_PUBLISHABLE_KEY is required for live mode. Please check your .env file.')
+    }
+  } else {
+    if (!import.meta.env.VITE_STRIPE_TEST_PUBLISHABLE_KEY) {
+      throw new Error('VITE_STRIPE_TEST_PUBLISHABLE_KEY is required for test mode. Please check your .env file.')
+    }
+  }
+}
+
+// Dynamic Stripe key loading based on environment
+const getStripeKey = () => {
+  const mode = import.meta.env.VITE_STRIPE_MODE || 'test'
+  if (mode === 'live') {
+    return import.meta.env.VITE_STRIPE_LIVE_PUBLISHABLE_KEY || ''
+  } else {
+    return import.meta.env.VITE_STRIPE_TEST_PUBLISHABLE_KEY || ''
+  }
+}
+
+// Initialize Stripe with validation
+try {
+  validateEnvironment()
+} catch (error) {
+  const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+  console.error('Environment validation failed:', errorMessage)
+  console.error('Please run: ./switch-env.sh test or ./switch-env.sh live')
+  console.error('Then fill in your actual keys in the .env file')
+}
+
+const stripePromise = loadStripe(getStripeKey())
 
 // Credit bundle configurations
 export interface CreditBundle {
-  id: string;
-  name: string;
-  price: number;
-  credits: number;
-  priceId: string; // Stripe Price ID
-  popular?: boolean;
+  id: string
+  name: string
+  price: number
+  credits: number
+  priceId: string // Stripe Price ID
+  popular?: boolean
+  description: string
+}
+
+// Dynamic price ID loading based on environment
+const getPriceId = (bundleNumber: number) => {
+  const mode = import.meta.env.VITE_STRIPE_MODE || 'test'
+  const prefix = mode === 'live' ? 'VITE_STRIPE_LIVE_PRICE_ID_BUNDLE_' : 'VITE_STRIPE_TEST_PRICE_ID_BUNDLE_'
+  return import.meta.env[`${prefix}${bundleNumber}`] || ''
 }
 
 // Helper function to get price ID based on environment
@@ -45,27 +85,27 @@ export const CREDIT_BUNDLES: CreditBundle[] = [
     name: "Starter Pack",
     price: 1,
     credits: 3,
-    priceId: getPriceId("bundle-1"),
+    priceId: getPriceId(1),
+    description: 'Perfect for trying out kite recommendations'
   },
   {
-    id: "bundle-2",
-    name: "Popular Pack",
-    price: 2,
+    id: 'bundle-2',
+    name: 'Popular Pack',
+    price: 3,
     credits: 10,
-    priceId: getPriceId("bundle-2"),
+    priceId: getPriceId(2),
     popular: true,
+    description: 'Most popular choice for regular users'
   },
   {
     id: "bundle-3",
     name: "Pro Pack",
     price: 5,
     credits: 25,
-    priceId: getPriceId("bundle-3"),
-  },
-];
-
-// Log all bundles for debugging
-console.log("📦 Credit Bundles Configuration:", CREDIT_BUNDLES);
+    priceId: getPriceId(3),
+    description: 'Best value for power users'
+  }
+]
 
 // Create Stripe Checkout session
 export const createCheckoutSession = async (
@@ -74,8 +114,9 @@ export const createCheckoutSession = async (
   userEmail: string
 ): Promise<string> => {
   try {
-    const response = await fetch("/api/create-checkout-session", {
-      method: "POST",
+    // Use Firebase Functions endpoint
+    const response = await fetch('https://us-central1-skite-app.cloudfunctions.net/createCheckoutSession', {
+      method: 'POST',
       headers: {
         "Content-Type": "application/json",
       },
@@ -85,11 +126,13 @@ export const createCheckoutSession = async (
         userEmail: userEmail,
         bundleId: bundle.id,
         credits: bundle.credits,
+        bundleName: bundle.name
       }),
     });
 
     if (!response.ok) {
-      throw new Error("Failed to create checkout session");
+      const errorData = await response.json()
+      throw new Error(errorData.message || 'Failed to create checkout session')
     }
 
     const { sessionId } = await response.json();
@@ -130,8 +173,8 @@ export const redirectToCheckout = async (
 // Verify payment success
 export const verifyPayment = async (sessionId: string): Promise<boolean> => {
   try {
-    const response = await fetch("/api/verify-payment", {
-      method: "POST",
+    const response = await fetch('https://us-central1-skite-app.cloudfunctions.net/verifyPayment', {
+      method: 'POST',
       headers: {
         "Content-Type": "application/json",
       },
@@ -148,4 +191,14 @@ export const verifyPayment = async (sessionId: string): Promise<boolean> => {
     console.error("Error verifying payment:", error);
     return false;
   }
-};
+}
+
+// Get bundle by ID
+export const getBundleById = (bundleId: string): CreditBundle | undefined => {
+  return CREDIT_BUNDLES.find(bundle => bundle.id === bundleId)
+}
+
+// Get bundle by Price ID
+export const getBundleByPriceId = (priceId: string): CreditBundle | undefined => {
+  return CREDIT_BUNDLES.find(bundle => bundle.priceId === priceId)
+} 

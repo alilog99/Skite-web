@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Check, Star, ArrowRight, Zap, ShoppingCart, Loader2 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
-import { CREDIT_BUNDLES, redirectToCheckout, CreditBundle } from '../services/stripe'
-import { addCredits } from '../services/firebase'
+import { CREDIT_BUNDLES, redirectToCheckout, CreditBundle, verifyPayment } from '../services/stripe'
 import { Toast } from '../components/Toast'
 
 export function Pricing() {
   const { currentUser, userData, refreshUserData } = useAuth()
+  const navigate = useNavigate()
   const [isProcessing, setIsProcessing] = useState(false)
   const [selectedBundle, setSelectedBundle] = useState<CreditBundle | null>(null)
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState('')
+  const [toastType, setToastType] = useState<'success' | 'error'>('success')
 
   // Check for successful payment on page load
   useEffect(() => {
@@ -21,26 +22,31 @@ export function Pricing() {
     const success = urlParams.get('success')
 
     if (sessionId && success === 'true') {
-      // In a real implementation, you would verify the payment with your backend
-      // For now, we'll simulate a successful payment
+      // Verify the payment with our backend
       setTimeout(async () => {
-        if (currentUser) {
-          try {
-            // Add credits based on the bundle (you'd get this from the session)
-            // For demo purposes, we'll add 10 credits
-            await addCredits(currentUser.uid, 10)
+        try {
+          const isPaymentSuccessful = await verifyPayment(sessionId)
+          if (isPaymentSuccessful) {
             await refreshUserData()
             setToastMessage('Payment successful! Credits have been added to your account.')
+            setToastType('success')
             setShowToast(true)
-          } catch (error) {
-            console.error('Error adding credits:', error)
+          } else {
+            setToastMessage('Payment verification failed. Please contact support if credits were not added.')
+            setToastType('error')
+            setShowToast(true)
           }
+        } catch (error) {
+          console.error('Error verifying payment:', error)
+          setToastMessage('Payment verification failed. Please contact support if credits were not added.')
+          setToastType('error')
+          setShowToast(true)
         }
         // Clean up URL
         window.history.replaceState({}, document.title, window.location.pathname)
       }, 1000)
     }
-  }, [currentUser, refreshUserData])
+  }, [refreshUserData])
 
 
 
@@ -158,7 +164,7 @@ export function Pricing() {
                   <button
                     onClick={() => {
                       if (!currentUser) {
-                        window.location.href = '/login'
+                        navigate('/login')
                         return
                       }
                       setIsProcessing(true)
@@ -167,6 +173,7 @@ export function Pricing() {
                         .catch((error) => {
                           console.error('Purchase error:', error)
                           setToastMessage('Failed to process purchase. Please try again.')
+                          setToastType('error')
                           setShowToast(true)
                         })
                         .finally(() => {
@@ -340,7 +347,7 @@ export function Pricing() {
       {showToast && (
         <Toast
           message={toastMessage}
-          type="success"
+          type={toastType}
           onClose={() => setShowToast(false)}
         />
       )}

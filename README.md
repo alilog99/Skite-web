@@ -15,8 +15,9 @@ A modern, responsive website for the S-Kite mobile app - Smart Kite Assistant fo
 
 1. **Home** - Landing page with hero section, features overview, and call-to-action
 2. **Features** - Detailed feature showcase with testimonials
-3. **Pricing** - Three-tier pricing with monthly/yearly billing toggle
-4. **Dashboard** - User dashboard with subscription management (placeholder for Firebase integration)
+3. **Pricing** - Three-tier credit system with Stripe integration
+4. **Dashboard** - User dashboard with credit management and profile
+5. **Signup/Login** - Firebase authentication with cross-platform sync
 
 ## 🛠 Tech Stack
 
@@ -27,59 +28,111 @@ A modern, responsive website for the S-Kite mobile app - Smart Kite Assistant fo
 - **Framer Motion** - Smooth animations and transitions
 - **React Router** - Client-side routing
 - **Lucide React** - Beautiful icons
+- **Firebase** - Authentication, Firestore database, and Cloud Functions
+- **Stripe** - Payment processing and subscription management
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
 - Node.js 16+ 
-- npm or yarn
+- Yarn (recommended) or npm
 
 ### Installation
 
 1. **Clone the repository**
    ```bash
    git clone <your-repo-url>
-   cd skite-website
+   cd Skite-web
    ```
 
 2. **Install dependencies**
    ```bash
-   npm install
+   yarn install
    ```
 
-3. **Start the development server**
+3. **Set up environment**
    ```bash
-   npm run dev
+   # Switch to test environment for development
+   ./switch-env.sh test
+   
+   # Edit .env file with your actual keys
+   nano .env
    ```
 
-4. **Open your browser**
+4. **Start the development server**
+   ```bash
+   yarn dev
+   ```
+
+5. **Open your browser**
    Navigate to `http://localhost:5173`
 
 ### Build for Production
 
 ```bash
-npm run build
+# Switch to live environment for production
+./switch-env.sh live
+
+# Edit .env file with your live keys
+nano .env
+
+# Build the application
+yarn build
 ```
 
 The built files will be in the `dist` directory, ready for deployment.
 
+## 📦 Package Manager
+
+This project uses **Yarn** as the package manager. If you prefer to use npm, you can still do so, but we recommend using Yarn for consistency.
+
+### Yarn Commands:
+```bash
+yarn install    # Install dependencies
+yarn dev        # Start development server
+yarn build      # Build for production
+yarn start      # Start production server
+yarn add pkg    # Add a package
+yarn remove pkg # Remove a package
+```
+
+### Migration from npm:
+If you're migrating from npm, simply run:
+```bash
+rm package-lock.json
+yarn install
+```
+
+## 🔧 Environment Management
+
+This project uses a dynamic environment system for managing Stripe keys and Firebase configuration. See `ENVIRONMENT_SETUP.md` for detailed instructions.
+
+### Quick Environment Commands:
+```bash
+./switch-env.sh test    # Switch to test environment
+./switch-env.sh live    # Switch to live environment  
+./switch-env.sh current # Check current environment
+./switch-env.sh validate # Validate configuration
+```
+
 ## 📁 Project Structure
 
 ```
-src/
-├── components/          # Reusable components
-│   ├── Header.tsx      # Navigation header
-│   ├── Footer.tsx      # Site footer
-│   └── ThemeProvider.tsx # Dark/light mode provider
-├── pages/              # Page components
-│   ├── Home.tsx        # Landing page
-│   ├── Features.tsx    # Features showcase
-│   ├── Pricing.tsx     # Pricing plans
-│   └── Dashboard.tsx   # User dashboard
-├── App.tsx             # Main app component
-├── main.tsx           # Entry point
-└── index.css          # Global styles
+Skite-web/
+├── src/                    # React application
+│   ├── components/         # Reusable components
+│   ├── pages/             # Page components
+│   ├── services/          # Firebase and Stripe services
+│   └── contexts/          # React contexts (Auth, Theme)
+├── functions/             # Firebase Cloud Functions
+│   └── src/               # Stripe payment processing
+├── .env.test              # Test environment template
+├── .env.live              # Live environment template
+├── switch-env.sh          # Environment switching script
+├── create-stripe-products.js # Stripe product creation utility
+├── yarn.lock              # Yarn lock file (dependency versions)
+└── ENVIRONMENT_SETUP.md   # Environment configuration guide
 ```
 
 ## 🎨 Design System
@@ -150,7 +203,7 @@ The website is designed to integrate with Firebase for:
 
 ### Netlify
 
-1. Build the project: `npm run build`
+1. Build the project: `yarn build`
 2. Upload the `dist` folder to Netlify
 3. Configure build settings if needed
 

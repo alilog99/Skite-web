@@ -5,11 +5,18 @@ yarn-debug.log*
 yarn-error.log*
 
 # Environment variables
+# Ignore active environment file and backups
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
+.env.backup*
+
+# Allow template files (these should be in Git)
+!.env.test
+!.env.live
+!.env.example
 
 # Build outputs
 dist/
@@ -20,10 +27,25 @@ build/
 .idea/
 *.swp
 *.swo
+*.sublime-*
+.atom/
+.brackets.json
+
+# Editor backup files
+*~
+*.bak
+*.backup
 
 # OS files
 .DS_Store
 Thumbs.db
+
+# History and temporary files
+.history/
+*.history
+*.tmp
+*.temp
+*~
 
 # Logs
 logs
@@ -37,6 +59,13 @@ pids
 
 # Coverage directory used by tools like istanbul
 coverage/
+
+# Additional temporary and cache files
+.cache/
+.parcel-cache/
+.turbo/
+.next/
+.nuxt/
 
 # Firebase
 .firebase/
