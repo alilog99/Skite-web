@@ -1,19 +1,15 @@
 import { loadStripe } from '@stripe/stripe-js'
-import dotenv from 'dotenv'
-
-// Load environment variables from .env file
-dotenv.config()
 
 // Validate that required environment variables are set
 const validateEnvironment = () => {
-  const mode = process.env.VITE_STRIPE_MODE || import.meta.env.VITE_STRIPE_MODE || 'test'
+  const mode = import.meta.env.VITE_STRIPE_MODE || 'test'
   
   if (mode === 'live') {
-    if (!process.env.VITE_STRIPE_LIVE_PUBLISHABLE_KEY && !import.meta.env.VITE_STRIPE_LIVE_PUBLISHABLE_KEY) {
+    if (!import.meta.env.VITE_STRIPE_LIVE_PUBLISHABLE_KEY) {
       throw new Error('VITE_STRIPE_LIVE_PUBLISHABLE_KEY is required for live mode. Please check your .env file.')
     }
   } else {
-    if (!process.env.VITE_STRIPE_TEST_PUBLISHABLE_KEY && !import.meta.env.VITE_STRIPE_TEST_PUBLISHABLE_KEY) {
+    if (!import.meta.env.VITE_STRIPE_TEST_PUBLISHABLE_KEY) {
       throw new Error('VITE_STRIPE_TEST_PUBLISHABLE_KEY is required for test mode. Please check your .env file.')
     }
   }
@@ -21,11 +17,11 @@ const validateEnvironment = () => {
 
 // Dynamic Stripe key loading based on environment
 const getStripeKey = () => {
-  const mode = process.env.VITE_STRIPE_MODE || import.meta.env.VITE_STRIPE_MODE || 'test'
+  const mode = import.meta.env.VITE_STRIPE_MODE || 'test'
   if (mode === 'live') {
-    return process.env.VITE_STRIPE_LIVE_PUBLISHABLE_KEY || import.meta.env.VITE_STRIPE_LIVE_PUBLISHABLE_KEY || ''
+    return import.meta.env.VITE_STRIPE_LIVE_PUBLISHABLE_KEY || ''
   } else {
-    return process.env.VITE_STRIPE_TEST_PUBLISHABLE_KEY || import.meta.env.VITE_STRIPE_TEST_PUBLISHABLE_KEY || ''
+    return import.meta.env.VITE_STRIPE_TEST_PUBLISHABLE_KEY || ''
   }
 }
 
@@ -54,9 +50,9 @@ export interface CreditBundle {
 
 // Dynamic price ID loading based on environment
 const getPriceId = (bundleNumber: number) => {
-  const mode = process.env.VITE_STRIPE_MODE || import.meta.env.VITE_STRIPE_MODE || 'test'
+  const mode = import.meta.env.VITE_STRIPE_MODE || 'test'
   const prefix = mode === 'live' ? 'VITE_STRIPE_LIVE_PRICE_ID_BUNDLE_' : 'VITE_STRIPE_TEST_PRICE_ID_BUNDLE_'
-  return process.env[`${prefix}${bundleNumber}`] || import.meta.env[`${prefix}${bundleNumber}`] || ''
+  return import.meta.env[`${prefix}${bundleNumber}`] || ''
 }
 
 export const CREDIT_BUNDLES: CreditBundle[] = [
