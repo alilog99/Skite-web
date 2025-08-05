@@ -61,25 +61,29 @@ export function Dashboard() {
       label: 'Available Credits',
       value: userData?.credits || 0,
       icon: Zap,
-      color: 'text-yellow-600'
+      color: 'text-yellow-600',
+      subtitle: userData?.totalCredits ? `Total: ${userData.totalCredits} • Used: ${userData.usedCredits || 0}` : undefined
     },
     {
       label: 'Forecasts This Month',
       value: user.usage.forecasts,
       icon: Cloud,
-      color: 'text-blue-600'
+      color: 'text-blue-600',
+      subtitle: undefined
     },
     {
       label: 'Sessions Logged',
       value: user.usage.sessions,
       icon: Wind,
-      color: 'text-green-600'
+      color: 'text-green-600',
+      subtitle: undefined
     },
     {
       label: 'Locations Saved',
       value: user.usage.locations,
       icon: MapPin,
-      color: 'text-purple-600'
+      color: 'text-purple-600',
+      subtitle: undefined
     }
   ]
 
@@ -178,6 +182,11 @@ export function Dashboard() {
                         <p className="text-2xl font-bold text-gray-900 dark:text-white">
                           {stat.value}
                         </p>
+                        {stat.subtitle && (
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            {stat.subtitle}
+                          </p>
+                        )}
                       </div>
                       <div className={`p-3 rounded-lg bg-gray-100 dark:bg-gray-700 ${stat.color}`}>
                         <stat.icon className="w-6 h-6" />
@@ -263,6 +272,12 @@ export function Dashboard() {
                         <p className="text-gray-600 dark:text-gray-300">
                           Use credits to get personalized kite recommendations
                         </p>
+                        {(userData?.totalCredits || 0) > 0 && (
+                          <div className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                            <span>Total earned: {userData?.totalCredits || 0} • </span>
+                            <span>Used: {userData?.usedCredits || 0}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div className="space-y-2">

@@ -27,6 +27,9 @@ export interface UserData {
   experienceLevel: string
   termsAndConditions: boolean
   credits: number
+  totalCredits?: number // Total credits earned/purchased
+  usedCredits?: number // Credits consumed
+  purchasedCredits?: number // Credits purchased via Stripe (for reference)
   createdAt: any
   updatedAt: any
 }
@@ -59,7 +62,10 @@ export const signUpWithEmailAndPassword = async (
         weight: userData.weight || null,
         experienceLevel: userData.experienceLevel,
         termsAndConditions: userData.termsAndConditions,
-        credits: 0, // Initialize with 0 credits
+        credits: 1, // Initialize with 1 free credit
+        totalCredits: 1, // Total credits (1 free credit)
+        usedCredits: 0, // No credits used yet
+        purchasedCredits: 0, // No purchased credits yet
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp()
       }
@@ -173,10 +179,12 @@ export const useCredits = async (uid: string, creditsToUse: number): Promise<boo
     
     if (userDoc.exists()) {
       const currentCredits = userDoc.data().credits || 0
+      const currentUsedCredits = userDoc.data().usedCredits || 0
       
       if (currentCredits >= creditsToUse) {
         await updateDoc(userDocRef, {
           credits: currentCredits - creditsToUse,
+          usedCredits: currentUsedCredits + creditsToUse,
           updatedAt: serverTimestamp()
         })
         return true
@@ -258,7 +266,10 @@ export const ensureUserDocument = async (uid: string, userData?: Partial<UserDat
           weight: null,
           experienceLevel: 'Beginner',
           termsAndConditions: true,
-          credits: 0,
+          credits: 1, // Initialize with 1 free credit
+          totalCredits: 1, // Total credits (1 free credit)
+          usedCredits: 0, // No credits used yet
+          purchasedCredits: 0, // No purchased credits yet
           createdAt: serverTimestamp(),
           updatedAt: serverTimestamp(),
           ...userData // Override with provided data

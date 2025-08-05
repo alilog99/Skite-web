@@ -124,11 +124,22 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
         throw new Error(`User document not found: ${userId}`)
       }
       
-      const currentCredits = userDoc.data()?.credits || 0
-      const newCredits = currentCredits + creditsToAdd
+      const userData = userDoc.data()
+      const currentTotalCredits = userData?.totalCredits || userData?.credits || 0
+      const currentUsedCredits = userData?.usedCredits || 0
+      const currentPurchasedCredits = userData?.purchasedCredits || 0
+      
+      // Add purchased credits to totalCredits
+      const newTotalCredits = currentTotalCredits + creditsToAdd
+      const newPurchasedCredits = currentPurchasedCredits + creditsToAdd
+      
+      // Recalculate available credits: totalCredits - usedCredits
+      const newCredits = newTotalCredits - currentUsedCredits
       
       transaction.update(userRef, {
         credits: newCredits,
+        totalCredits: newTotalCredits,
+        purchasedCredits: newPurchasedCredits,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       })
       
@@ -138,6 +149,8 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
         sessionId: session.id,
         bundleName: bundleName,
         creditsAdded: creditsToAdd,
+        totalCreditsBefore: currentTotalCredits,
+        totalCreditsAfter: newTotalCredits,
         amount: session.amount_total,
         currency: session.currency,
         status: 'completed',
