@@ -30,9 +30,9 @@ export const createCheckoutSession = functions.https.onRequest((req, res) => {
         return
       }
 
-      const { priceId, userId, userEmail, bundleId, credits, bundleName } = req.body
+      const { priceId, uid, userEmail, bundleId, credits, bundleName } = req.body
 
-      if (!priceId || !userId || !userEmail) {
+      if (!priceId || !uid || !userEmail) {
         res.status(400).json({ error: 'Missing required parameters' })
         return
       }
@@ -56,7 +56,7 @@ export const createCheckoutSession = functions.https.onRequest((req, res) => {
         success_url: `${functions.config().app.url}/credits?success=true&session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `${functions.config().app.url}/credits?canceled=true`,
         metadata: {
-          userId: userId,
+          uid: uid,
           userEmail: userEmail,
           bundleId: bundleId,
           credits: credits.toString(),
@@ -105,9 +105,9 @@ export const stripeWebhook = functions.https.onRequest((req, res) => {
 // Handle successful checkout session
 async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
   try {
-    const { userId, credits, bundleName } = session.metadata || {}
+    const { uid, credits } = session.metadata || {}
     
-    if (!userId || !credits) {
+    if (!uid || !credits) {
       console.error('Missing metadata in checkout session:', session.id)
       return
     }
@@ -115,42 +115,41 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
     const creditsToAdd = parseInt(credits, 10)
     
     // Update user's credits in Firestore
-    const userRef = admin.firestore().collection('users').doc(userId)
+    const userRef = admin.firestore().collection('users').doc(uid)
     
     await admin.firestore().runTransaction(async (transaction) => {
       const userDoc = await transaction.get(userRef)
       
       if (!userDoc.exists) {
-        throw new Error(`User document not found: ${userId}`)
+        throw new Error(`User document not found: ${uid}`)
       }
       
       const userData = userDoc.data()
       const currentTotalCredits = userData?.totalCredits || userData?.credits || 0
-      const currentUsedCredits = userData?.usedCredits || 0
       const currentPurchasedCredits = userData?.purchasedCredits || 0
       
-      // Add purchased credits to totalCredits
+      // Add purchased credits to totalCredits and purchasedCredits
       const newTotalCredits = currentTotalCredits + creditsToAdd
       const newPurchasedCredits = currentPurchasedCredits + creditsToAdd
       
-      // Recalculate available credits: totalCredits - usedCredits
-      const newCredits = newTotalCredits - currentUsedCredits
+      // Do NOT touch usedCredits - keep it unchanged
       
+      // Update user document
       transaction.update(userRef, {
-        credits: newCredits,
         totalCredits: newTotalCredits,
         purchasedCredits: newPurchasedCredits,
         updatedAt: admin.firestore.FieldValue.serverTimestamp(),
       })
       
-      // Log the transaction
-      transaction.create(admin.firestore().collection('credit_transactions').doc(), {
-        userId: userId,
+      // Log the transaction in user's subcollection
+      const transactionRef = userRef.collection('credit_transactions').doc()
+      transaction.create(transactionRef, {
         sessionId: session.id,
-        bundleName: bundleName,
         creditsAdded: creditsToAdd,
         totalCreditsBefore: currentTotalCredits,
         totalCreditsAfter: newTotalCredits,
+        purchasedCreditsBefore: currentPurchasedCredits,
+        purchasedCreditsAfter: newPurchasedCredits,
         amount: session.amount_total,
         currency: session.currency,
         status: 'completed',
@@ -158,7 +157,7 @@ async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) 
       })
     })
     
-    console.log(`Successfully added ${creditsToAdd} credits to user ${userId}`)
+    console.log(`Successfully added ${creditsToAdd} credits to user ${uid}`)
   } catch (error) {
     console.error('Error handling checkout session completed:', error)
   }

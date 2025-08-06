@@ -86,7 +86,7 @@ export const CREDIT_BUNDLES: CreditBundle[] = [
 // Create Stripe Checkout session
 export const createCheckoutSession = async (
   bundle: CreditBundle,
-  userId: string,
+  uid: string,
   userEmail: string
 ): Promise<string> => {
   try {
@@ -98,7 +98,7 @@ export const createCheckoutSession = async (
       },
       body: JSON.stringify({
         priceId: bundle.priceId,
-        userId: userId,
+        uid: uid,
         userEmail: userEmail,
         bundleId: bundle.id,
         credits: bundle.credits,
@@ -122,7 +122,7 @@ export const createCheckoutSession = async (
 // Redirect to Stripe Checkout
 export const redirectToCheckout = async (
   bundle: CreditBundle,
-  userId: string,
+  uid: string,
   userEmail: string
 ): Promise<void> => {
   try {
@@ -131,7 +131,7 @@ export const redirectToCheckout = async (
       throw new Error('Stripe failed to load')
     }
 
-    const sessionId = await createCheckoutSession(bundle, userId, userEmail)
+    const sessionId = await createCheckoutSession(bundle, uid, userEmail)
     
     const { error } = await stripe.redirectToCheckout({
       sessionId,
