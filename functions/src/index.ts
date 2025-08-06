@@ -7,7 +7,7 @@ import * as cors from 'cors'
 admin.initializeApp()
 
 // Initialize Stripe
-const stripe = new Stripe(functions.config().stripe.secret_key, {
+const stripe = new Stripe(functions.config().stripe.live_secret_key, {
   apiVersion: '2022-11-15',
 })
 
@@ -16,9 +16,9 @@ const corsHandler = cors({ origin: true })
 
 // Credit bundle configurations
 const CREDIT_BUNDLES = {
-  'price_1Rt15kF3UT2qFDZwG6LRVmQP': { credits: 3, name: 'Starter Pack' },
-  'price_1Rt16aF3UT2qFDZwE0eOqzB4': { credits: 10, name: 'Popular Pack' },
-  'price_1Rt17EF3UT2qFDZw4IIlo2Jz': { credits: 25, name: 'Pro Pack' },
+  'price_1RqwrWF3UT2qFDZwOlThlOn2': { credits: 3, name: 'Starter Pack' },
+  'price_1Rt13BF3UT2qFDZwEHiE922x': { credits: 10, name: 'Popular Pack' },
+  'price_1RqwuqF3UT2qFDZwVDL56jKl': { credits: 25, name: 'Pro Pack' },
 }
 
 // Create checkout session
