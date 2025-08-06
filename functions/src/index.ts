@@ -16,9 +16,9 @@ const corsHandler = cors({ origin: true })
 
 // Credit bundle configurations
 const CREDIT_BUNDLES = {
-  'price_1RqckrFXWKfEvemGm5bfXri5': { credits: 3, name: 'Starter Pack' },
-  'price_1RqclZFXWKfEvemGF1iltPvj': { credits: 10, name: 'Popular Pack' },
-  'price_1RqcmSFXWKfEvemG52HgrenK': { credits: 25, name: 'Pro Pack' },
+  'price_1Rt15kF3UT2qFDZwG6LRVmQP': { credits: 3, name: 'Starter Pack' },
+  'price_1Rt16aF3UT2qFDZwE0eOqzB4': { credits: 10, name: 'Popular Pack' },
+  'price_1Rt17EF3UT2qFDZw4IIlo2Jz': { credits: 25, name: 'Pro Pack' },
 }
 
 // Create checkout session
