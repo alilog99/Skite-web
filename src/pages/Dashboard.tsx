@@ -9,7 +9,6 @@ import {
   BarChart3,
   Wind,
   Cloud,
-  MapPin,
   Calendar,
   Zap,
   Plus
@@ -59,31 +58,10 @@ export function Dashboard() {
   const stats = [
     {
       label: 'Available Credits',
-      value: userData?.credits || 0,
+      value: (userData?.totalCredits || 0) - (userData?.usedCredits || 0),
       icon: Zap,
       color: 'text-yellow-600',
       subtitle: userData?.totalCredits ? `Total: ${userData.totalCredits} • Used: ${userData.usedCredits || 0}` : undefined
-    },
-    {
-      label: 'Forecasts This Month',
-      value: user.usage.forecasts,
-      icon: Cloud,
-      color: 'text-blue-600',
-      subtitle: undefined
-    },
-    {
-      label: 'Sessions Logged',
-      value: user.usage.sessions,
-      icon: Wind,
-      color: 'text-green-600',
-      subtitle: undefined
-    },
-    {
-      label: 'Locations Saved',
-      value: user.usage.locations,
-      icon: MapPin,
-      color: 'text-purple-600',
-      subtitle: undefined
     }
   ]
 
@@ -165,7 +143,7 @@ export function Dashboard() {
           {activeTab === 'overview' && (
             <div className="space-y-8">
               {/* Stats Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 max-w-md">
                 {stats.map((stat, index) => (
                   <motion.div
                     key={stat.label}
@@ -267,7 +245,7 @@ export function Dashboard() {
                       <Zap className="w-8 h-8 text-yellow-500" />
                       <div>
                         <h4 className="text-xl font-semibold text-gray-900 dark:text-white">
-                          {userData?.credits || 0} Credits Available
+                          {(userData?.totalCredits || 0) - (userData?.usedCredits || 0)} Credits Available
                         </h4>
                         <p className="text-gray-600 dark:text-gray-300">
                           Use credits to get personalized kite recommendations
@@ -321,7 +299,7 @@ export function Dashboard() {
                   Recent Credit Usage
                 </h3>
                 <div className="space-y-4">
-                  {userData?.credits === 0 ? (
+                  {(userData?.totalCredits || 0) - (userData?.usedCredits || 0) === 0 ? (
                     <p className="text-gray-600 dark:text-gray-300 text-center py-4">
                       No credits used yet. Purchase credits to get started!
                     </p>

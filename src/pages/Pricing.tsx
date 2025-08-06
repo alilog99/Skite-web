@@ -99,7 +99,7 @@ export function Pricing() {
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-300">Current Credits</p>
                     <p className="text-3xl font-bold text-gray-900 dark:text-white">
-                      {userData?.credits || 0}
+                      {(userData?.totalCredits || 0) - (userData?.usedCredits || 0)}
                     </p>
                   </div>
                 </div>
