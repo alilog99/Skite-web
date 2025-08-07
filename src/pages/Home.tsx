@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowRight, Wind, Zap, Shield, CheckCircle, Cloud, Navigation } from 'lucide-react'
+import { ArrowRight, Wind, Shield, CheckCircle, Cloud, Navigation } from 'lucide-react'
+import headerImage from '../assets/header-img.jpeg'
 
 export function Home() {
   const features = [
@@ -38,76 +39,41 @@ export function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="section-padding bg-gradient-to-br from-primary-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
-        <div className="container-custom">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <section className="relative min-h-screen flex items-center">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${headerImage})` }}
+        >
+          {/* Overlay for better text readability */}
+          <div className="absolute inset-0 bg-black/30"></div>
+        </div>
+        
+        <div className="container-custom relative z-10">
+          <div className="max-w-4xl">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-left"
             >
-              <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-                Fly Smarter with
-                <span className="text-primary-600 dark:text-primary-400"> S-Kite</span>
+              <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 text-left">
+                Fly Smarter With
+                <span className="text-primary-300"> S-Kite</span>
               </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
+              <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl text-left">
                 S-Kite helps you choose the right kite size and evaluate weather conditions based on your skill, weight, and location. 
                 Make safer, smarter decisions on the water.
               </p>
-                                      <div className="flex flex-col sm:flex-row gap-4">
-                          <Link to="/signup" className="btn-primary inline-flex items-center">
-                            Get Started
-                            <ArrowRight className="ml-2 w-5 h-5" />
-                          </Link>
-                          <Link to="/features" className="btn-secondary inline-flex items-center">
-                            Learn More
-                            <ArrowRight className="ml-2 w-5 h-5" />
-                          </Link>
-                        </div>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative"
-            >
-              {/* Mock App Screenshot */}
-              <div className="relative mx-auto max-w-sm">
-                <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl p-2">
-                  <div className="bg-gradient-to-br from-blue-100 to-cyan-100 dark:from-blue-900 dark:to-cyan-900 rounded-2xl p-6 h-96 flex items-center justify-center">
-                    <div className="text-center">
-                      <Wind className="w-16 h-16 text-primary-600 mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-                        S-Kite Assistant
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-300 mb-4">
-                        Smart kite recommendations
-                      </p>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span>Wind Speed:</span>
-                          <span className="font-semibold">18 knots</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Recommended Kite:</span>
-                          <span className="font-semibold">12m²</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Risk Level:</span>
-                          <span className="font-semibold text-green-600">Low</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {/* Floating elements */}
-                <div className="absolute -top-4 -right-4 bg-primary-500 rounded-full p-3 shadow-lg">
-                  <CheckCircle className="w-6 h-6 text-white" />
-                </div>
-                <div className="absolute -bottom-4 -left-4 bg-green-500 rounded-full p-3 shadow-lg">
-                  <Zap className="w-6 h-6 text-white" />
-                </div>
+              <div className="flex flex-col sm:flex-row gap-4 justify-start">
+                <Link to="/signup" className="btn-primary inline-flex items-center bg-white text-primary-600 hover:bg-gray-100">
+                  Get Started
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
+                <Link to="/features" className="btn-secondary inline-flex items-center border-2 border-white text-white hover:bg-white hover:text-primary-600">
+                  Learn More
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
               </div>
             </motion.div>
           </div>
@@ -198,23 +164,33 @@ export function Home() {
               viewport={{ once: true }}
               className="relative"
             >
-              <div className="bg-white dark:bg-gray-700 rounded-2xl shadow-xl p-8">
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                    <div className="flex-1 bg-gray-100 dark:bg-gray-600 h-4 rounded"></div>
+              {/* S-Kite Assistant Card */}
+              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl shadow-xl p-8 border border-blue-200 dark:border-blue-800">
+                <div className="flex items-center space-x-4 mb-6">
+                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-800 rounded-lg flex items-center justify-center">
+                    <Wind className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                    <div className="flex-1 bg-gray-100 dark:bg-gray-600 h-4 rounded"></div>
+                  <div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                      S-Kite Assistant
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      Smart kite recommendations
+                    </p>
                   </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                    <div className="flex-1 bg-gray-100 dark:bg-gray-600 h-4 rounded"></div>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 dark:text-gray-300">Wind Speed:</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">18 knots</span>
                   </div>
-                  <div className="flex items-center space-x-4">
-                    <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-                    <div className="flex-1 bg-gray-100 dark:bg-gray-600 h-4 rounded"></div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 dark:text-gray-300">Recommended Kite:</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">12m²</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600 dark:text-gray-300">Risk Level:</span>
+                    <span className="font-semibold text-green-600 dark:text-green-400">Low</span>
                   </div>
                 </div>
               </div>
