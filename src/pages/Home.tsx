@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowRight, Wind, Shield, CheckCircle, Cloud, Navigation } from 'lucide-react'
+import { ArrowRight, Wind, Shield, CheckCircle, Cloud, Navigation, Zap } from 'lucide-react'
 import headerImage from '../assets/header-img.jpeg'
 
 export function Home() {
@@ -162,34 +162,42 @@ export function Home() {
               whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               viewport={{ once: true }}
-              className="relative"
+              className="relative flex justify-center lg:justify-end"
             >
               {/* S-Kite Assistant Card */}
-              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl shadow-xl p-8 border border-blue-200 dark:border-blue-800">
-                <div className="flex items-center space-x-4 mb-6">
-                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-800 rounded-lg flex items-center justify-center">
-                    <Wind className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              <div className="relative w-80 h-80 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-2xl shadow-xl p-6 border border-blue-200 dark:border-blue-800 flex flex-col justify-center">
+                {/* Top Right Corner Icon */}
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center shadow-lg">
+                  <CheckCircle className="w-5 h-5 text-white" />
+                </div>
+                
+                {/* Bottom Left Corner Icon */}
+                <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
+                  <Zap className="w-4 h-4 text-white" />
+                </div>
+                
+                <div className="text-center mb-6">
+                  <div className="w-12 h-12 bg-blue-200 dark:bg-blue-700 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <Wind className="w-6 h-6 text-blue-700 dark:text-blue-300" />
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                      S-Kite Assistant
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-300">
-                      Smart kite recommendations
-                    </p>
-                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    S-Kite Assistant
+                  </h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    Smart kite recommendations
+                  </p>
                 </div>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-300">Wind Speed:</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300">Wind Speed:</span>
                     <span className="font-semibold text-gray-900 dark:text-white">18 knots</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-300">Recommended Kite:</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300">Recommended Kite:</span>
                     <span className="font-semibold text-gray-900 dark:text-white">12m²</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-300">Risk Level:</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300">Risk Level:</span>
                     <span className="font-semibold text-green-600 dark:text-green-400">Low</span>
                   </div>
                 </div>
