@@ -70,7 +70,7 @@ export function Home() {
                   Get Started
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
-                <Link to="/features" className="btn-secondary inline-flex items-center border-2 border-white text-white hover:bg-white hover:text-primary-600">
+                <Link to="/features" className="btn-secondary inline-flex items-center border-2 border-white text-primary-600 bg-white hover:bg-gray-100">
                   Learn More
                   <ArrowRight className="ml-2 w-5 h-5" />
                 </Link>
