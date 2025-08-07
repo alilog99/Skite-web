@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { Wind, Github, Twitter, Mail, Phone } from 'lucide-react'
+import { Github, Twitter, Mail, Phone } from 'lucide-react'
+import skiteLogo from '../assets/logo/SKite-Logo-Source.svg'
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -54,13 +55,12 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-                <Wind className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-gray-900 dark:text-white">
-                S-Kite
-              </span>
+            <Link to="/" className="flex items-center mb-4">
+              <img 
+                src={skiteLogo} 
+                alt="SKite Logo" 
+                className="h-8 w-auto dark:invert"
+              />
             </Link>
             <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-md">
               Smart Kite Assistant for kitesurfers and windsurfers. Get real-time weather analysis, 

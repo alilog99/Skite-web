@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Menu, X, Sun, Moon, Wind, LogOut, User } from 'lucide-react'
+import { Menu, X, Sun, Moon, LogOut, User } from 'lucide-react'
 import { useTheme } from './ThemeProvider'
 import { useAuth } from '../contexts/AuthContext'
 import { signOutUser } from '../services/firebase'
+import skiteLogo from '../assets/logo/SKite-Logo-Source.svg'
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -46,13 +47,12 @@ export function Header() {
       <div className="container-custom">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center">
-              <Wind className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold text-gray-900 dark:text-white">
-              S-Kite
-            </span>
+          <Link to="/" className="flex items-center">
+            <img 
+              src={skiteLogo} 
+              alt="SKite Logo" 
+              className="h-8 w-auto dark:invert"
+            />
           </Link>
 
           {/* Desktop Navigation */}

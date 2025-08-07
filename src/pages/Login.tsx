@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Eye, EyeOff, Mail, Lock, Wind } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
 import { signInWithEmailAndPassword, ensureUserDocument } from '../services/firebase'
+import skiteLogo from '../assets/logo/SKite-Logo-Source.svg'
 
 export function Login() {
   const [email, setEmail] = useState('')
@@ -65,13 +66,12 @@ export function Login() {
       >
         {/* Header */}
         <div className="text-center">
-          <Link to="/" className="flex items-center justify-center space-x-2 mb-8">
-            <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
-              <Wind className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-gray-900 dark:text-white">
-              S-Kite
-            </span>
+          <Link to="/" className="flex items-center justify-center mb-8">
+            <img 
+              src={skiteLogo} 
+              alt="SKite Logo" 
+              className="h-10 w-auto dark:invert"
+            />
           </Link>
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
             Welcome back

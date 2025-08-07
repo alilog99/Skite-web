@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Eye, EyeOff, Mail, Lock, User, Wind, Scale, Award } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, User, Scale, Award } from 'lucide-react'
 import { signUpWithEmailAndPassword, handleExistingUserSignup } from '../services/firebase'
+import skiteLogo from '../assets/logo/SKite-Logo-Source.svg'
 
 export function Signup() {
   const [formData, setFormData] = useState({
@@ -141,13 +142,12 @@ export function Signup() {
       >
         {/* Header */}
         <div className="text-center">
-          <Link to="/" className="flex items-center justify-center space-x-2 mb-8">
-            <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
-              <Wind className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-gray-900 dark:text-white">
-              S-Kite
-            </span>
+          <Link to="/" className="flex items-center justify-center mb-8">
+            <img 
+              src={skiteLogo} 
+              alt="SKite Logo" 
+              className="h-10 w-auto dark:invert"
+            />
           </Link>
           <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
             Create your account
