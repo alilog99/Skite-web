@@ -35,32 +35,36 @@ A modern, responsive website for the S-Kite mobile app - Smart Kite Assistant fo
 
 ### Prerequisites
 
-- Node.js 16+ 
+- Node.js 16+
 - Yarn (recommended) or npm
 
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <your-repo-url>
    cd Skite-web
    ```
 
 2. **Install dependencies**
+
    ```bash
    yarn install
    ```
 
 3. **Set up environment**
+
    ```bash
    # Switch to test environment for development
    ./switch-env.sh test
-   
+
    # Edit .env file with your actual keys
    nano .env
    ```
 
 4. **Start the development server**
+
    ```bash
    yarn dev
    ```
@@ -88,6 +92,7 @@ The built files will be in the `dist` directory, ready for deployment.
 This project uses **Yarn** as the package manager. If you prefer to use npm, you can still do so, but we recommend using Yarn for consistency.
 
 ### Yarn Commands:
+
 ```bash
 yarn install    # Install dependencies
 yarn dev        # Start development server
@@ -98,7 +103,9 @@ yarn remove pkg # Remove a package
 ```
 
 ### Migration from npm:
+
 If you're migrating from npm, simply run:
+
 ```bash
 rm package-lock.json
 yarn install
@@ -109,9 +116,10 @@ yarn install
 This project uses a dynamic environment system for managing Stripe keys and Firebase configuration. See `ENVIRONMENT_SETUP.md` for detailed instructions.
 
 ### Quick Environment Commands:
+
 ```bash
 ./switch-env.sh test    # Switch to test environment
-./switch-env.sh live    # Switch to live environment  
+./switch-env.sh live    # Switch to live environment
 ./switch-env.sh current # Check current environment
 ./switch-env.sh validate # Validate configuration
 ```
@@ -138,6 +146,7 @@ Skite-web/
 ## 🎨 Design System
 
 ### Colors
+
 - **Primary**: Blue gradient (`#0ea5e9` to `#0284c7`)
 - **Gray**: Neutral grays for text and backgrounds
 - **Success**: Green for positive actions
@@ -145,10 +154,12 @@ Skite-web/
 - **Error**: Red for errors
 
 ### Typography
+
 - **Font**: Inter (Google Fonts)
 - **Weights**: 300, 400, 500, 600, 700
 
 ### Components
+
 - **Buttons**: Primary and secondary variants with hover effects
 - **Cards**: Consistent card design with shadows and borders
 - **Navigation**: Sticky header with mobile menu
@@ -193,23 +204,73 @@ The website is designed to integrate with Firebase for:
 4. Add Firestore for user data
 5. Integrate Stripe for payments
 
-## 📦 Deployment
+## 🚀 Deployment
 
-### Vercel (Recommended)
+### Firebase Hosting (Current)
+
+**Live Site**: https://skite-app.web.app  
+**Custom Domain**: https://skite.info (DNS setup required)
+
+#### Quick Deployment
+
+```bash
+# One-command deployment
+./deploy.sh
+```
+
+#### Manual Deployment
+
+```bash
+# 1. Switch to live environment
+./switch-env.sh live
+
+# 2. Build and deploy
+yarn clean:build && firebase deploy --only hosting
+
+# 3. Verify deployment
+curl -s -o /dev/null -w "%{http_code}" https://skite-app.web.app
+```
+
+#### Available Scripts
+
+```bash
+yarn clean              # Clean build artifacts
+yarn clean:all          # Clean everything + node_modules
+yarn clean:build        # Clean and build
+yarn deploy:build       # Full deployment build (clean + type-check + build)
+yarn type-check         # TypeScript type checking
+yarn lint               # ESLint checking
+yarn lint:fix           # Auto-fix ESLint issues
+yarn format             # Format code with Prettier
+yarn format:check       # Check code formatting
+```
+
+### Documentation
+
+- **Complete Guide**: See `DEPLOYMENT.md` for comprehensive deployment instructions
+- **Quick Checklist**: See `DEPLOYMENT_CHECKLIST.md` for deployment verification
+- **Environment Setup**: See `ENVIRONMENT_SETUP.md` for environment configuration
+
+### Custom Domain Setup
+
+1. Go to [Firebase Console](https://console.firebase.google.com/project/skite-app/hosting)
+2. Add custom domain: `skite.info`
+3. Configure DNS records as provided by Firebase
+4. Wait 24-48 hours for SSL certificate provisioning
+
+### Other Deployment Options
+
+#### Vercel
 
 1. Connect your GitHub repository to Vercel
 2. Vercel will automatically detect the Vite configuration
 3. Deploy with one click
 
-### Netlify
+#### Netlify
 
 1. Build the project: `yarn build`
 2. Upload the `dist` folder to Netlify
 3. Configure build settings if needed
-
-### Other Platforms
-
-The built files in the `dist` directory can be deployed to any static hosting service.
 
 ## 🤝 Contributing
 
@@ -226,10 +287,11 @@ This project is licensed under the MIT License.
 ## 🆘 Support
 
 For support or questions:
+
 - Create an issue in the repository
 - Contact the development team
 - Check the documentation
 
 ---
 
-Built with ❤️ for the S-Kite mobile app 
+Built with ❤️ for the S-Kite mobile app
