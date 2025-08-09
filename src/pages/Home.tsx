@@ -1,54 +1,68 @@
-import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { ArrowRight, Wind, Shield, CheckCircle, Cloud, Navigation, Zap } from 'lucide-react'
-import headerImage from '../assets/header-img.jpeg'
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import {
+  ArrowRight,
+  Wind,
+  Shield,
+  CheckCircle,
+  Cloud,
+  Navigation,
+  Zap,
+} from "lucide-react";
+import headerImage from "../assets/header-img.jpeg";
 
 export function Home() {
   const features = [
     {
       icon: Cloud,
-      title: 'Real-time Weather Analysis',
-      description: 'Get accurate wind forecasts and weather conditions for your location.',
+      title: "Real-time Weather Analysis",
+      description:
+        "Get accurate wind forecasts and weather conditions for your location.",
     },
     {
       icon: Wind,
-      title: 'Smart Kite Recommendations',
-      description: 'Physics-based calculations for optimal kite size based on your weight and conditions.',
+      title: "Smart Kite Recommendations",
+      description:
+        "Physics-based calculations for optimal kite size based on your weight and conditions.",
     },
     {
       icon: Shield,
-      title: 'Risk Assessment',
-      description: 'Advanced safety analysis to help you make informed decisions on the water.',
+      title: "Risk Assessment",
+      description:
+        "Advanced safety analysis to help you make informed decisions on the water.",
     },
     {
       icon: Navigation,
-      title: 'Location-Based Insights',
-      description: 'GPS-powered suggestions for the best spots and conditions in your area.',
+      title: "Location-Based Insights",
+      description:
+        "GPS-powered suggestions for the best spots and conditions in your area.",
     },
-  ]
+  ];
 
   const benefits = [
-    'Choose the right kite size for any conditions',
-    'Get real-time wind and weather updates',
-    'Assess risks before hitting the water',
-    'Save multiple rider profiles',
-    'Offline forecast access',
-    'Multi-language and unit system support',
-  ]
+    "Choose the right kite size for any conditions",
+    "Get real-time wind and weather updates",
+    "Assess risks before hitting the water",
+    "Save multiple rider profiles",
+    "Offline forecast access",
+    "Multi-language and unit system support",
+  ];
 
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center">
+      <section className="relative min-h-screen sm:min-h-screen flex items-center overflow-hidden">
         {/* Background Image */}
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${headerImage})` }}
-        >
+        <div className="absolute inset-0">
+          <img
+            src={headerImage}
+            alt="Kitesurfing background"
+            className="hero-image"
+          />
           {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-black/30"></div>
+          <div className="absolute inset-0 bg-black/40 sm:bg-black/30"></div>
         </div>
-        
+
         <div className="container-custom relative z-10">
           <div className="max-w-4xl">
             <motion.div
@@ -57,22 +71,32 @@ export function Home() {
               transition={{ duration: 0.8 }}
               className="text-left"
             >
-              <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 text-left">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
                 Fly Smarter With
-                <span className="text-primary-300"> S-Kite</span>
+                <span className="text-primary-300 block sm:inline">
+                  {" "}
+                  S-Kite
+                </span>
               </h1>
-              <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-2xl text-left">
-                S-Kite helps you choose the right kite size and evaluate weather conditions based on your skill, weight, and location. 
-                Make safer, smarter decisions on the water.
+              <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-6 sm:mb-8 max-w-2xl leading-relaxed">
+                S-Kite helps you choose the right kite size and evaluate weather
+                conditions based on your skill, weight, and location. Make
+                safer, smarter decisions on the water.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-start">
-                <Link to="/signup" className="btn-primary inline-flex items-center bg-white text-primary-600 hover:bg-gray-100">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-start">
+                <Link
+                  to="/signup"
+                  className="btn-primary inline-flex items-center justify-center bg-white text-primary-600 hover:bg-gray-100 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold"
+                >
                   Get Started
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                 </Link>
-                <Link to="/features" className="btn-secondary inline-flex items-center border-2 border-white text-primary-600 bg-white hover:bg-gray-100">
+                <Link
+                  to="/features"
+                  className="btn-secondary inline-flex items-center justify-center border-2 border-white text-primary-600 bg-white hover:bg-gray-100 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold"
+                >
                   Learn More
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                  <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                 </Link>
               </div>
             </motion.div>
@@ -94,7 +118,8 @@ export function Home() {
               Why Choose S-Kite?
             </h2>
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              Built specifically for kitesurfers and windsurfers with advanced weather analysis
+              Built specifically for kitesurfers and windsurfers with advanced
+              weather analysis
             </p>
           </motion.div>
 
@@ -137,8 +162,9 @@ export function Home() {
                 Everything you need for safer sessions
               </h2>
               <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-                S-Kite provides all the tools you need to make informed decisions on the water, 
-                whether you're a beginner or an experienced rider.
+                S-Kite provides all the tools you need to make informed
+                decisions on the water, whether you're a beginner or an
+                experienced rider.
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {benefits.map((benefit, index) => (
@@ -151,7 +177,9 @@ export function Home() {
                     className="flex items-center space-x-3"
                   >
                     <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                    <span className="text-gray-700 dark:text-gray-300">{benefit}</span>
+                    <span className="text-gray-700 dark:text-gray-300">
+                      {benefit}
+                    </span>
                   </motion.div>
                 ))}
               </div>
@@ -170,12 +198,12 @@ export function Home() {
                 <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center shadow-lg">
                   <CheckCircle className="w-5 h-5 text-white" />
                 </div>
-                
+
                 {/* Bottom Left Corner Icon */}
                 <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
                   <Zap className="w-4 h-4 text-white" />
                 </div>
-                
+
                 <div className="text-center mb-6">
                   <div className="w-12 h-12 bg-blue-200 dark:bg-blue-700 rounded-lg flex items-center justify-center mx-auto mb-3">
                     <Wind className="w-6 h-6 text-blue-700 dark:text-blue-300" />
@@ -189,16 +217,28 @@ export function Home() {
                 </div>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600 dark:text-gray-300">Wind Speed:</span>
-                    <span className="font-semibold text-gray-900 dark:text-white">18 knots</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
+                      Wind Speed:
+                    </span>
+                    <span className="font-semibold text-gray-900 dark:text-white">
+                      18 knots
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600 dark:text-gray-300">Recommended Kite:</span>
-                    <span className="font-semibold text-gray-900 dark:text-white">12m²</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
+                      Recommended Kite:
+                    </span>
+                    <span className="font-semibold text-gray-900 dark:text-white">
+                      12m²
+                    </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600 dark:text-gray-300">Risk Level:</span>
-                    <span className="font-semibold text-green-600 dark:text-green-400">Low</span>
+                    <span className="text-sm text-gray-600 dark:text-gray-300">
+                      Risk Level:
+                    </span>
+                    <span className="font-semibold text-green-600 dark:text-green-400">
+                      Low
+                    </span>
                   </div>
                 </div>
               </div>
@@ -220,15 +260,19 @@ export function Home() {
               Ready to fly smarter?
             </h2>
             <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of kitesurfers who trust S-Kite for safer, more informed sessions
+              Join thousands of kitesurfers who trust S-Kite for safer, more
+              informed sessions
             </p>
-                                  <Link to="/signup" className="bg-white text-primary-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-all duration-200 inline-flex items-center">
-                        Start Flying Smarter
-                        <ArrowRight className="ml-2 w-5 h-5" />
-                      </Link>
+            <Link
+              to="/signup"
+              className="bg-white text-primary-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-all duration-200 inline-flex items-center"
+            >
+              Start Flying Smarter
+              <ArrowRight className="ml-2 w-5 h-5" />
+            </Link>
           </motion.div>
         </div>
       </section>
     </div>
-  )
-} 
+  );
+}
