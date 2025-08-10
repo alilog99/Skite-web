@@ -250,6 +250,7 @@ yarn format:check       # Check code formatting
 - **Complete Guide**: See `DEPLOYMENT.md` for comprehensive deployment instructions
 - **Quick Checklist**: See `DEPLOYMENT_CHECKLIST.md` for deployment verification
 - **Environment Setup**: See `ENVIRONMENT_SETUP.md` for environment configuration
+- **Future Work / Roadmap**: See `TODO.md` for deferred items and next steps
 
 ### Custom Domain Setup
 
