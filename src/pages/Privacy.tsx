@@ -35,6 +35,9 @@ export function Privacy() {
               numbers on our servers.
             </li>
             <li>Usage data and device information to improve the product.</li>
+            <li>
+              We only collect optional personal information such as name, gender, weight, email, medical condition, and emergency contact number,with weight requested when you click "Get Kite Recommendation" or "Calculate Recommendation" buttons on home and calculator screens so we can suggest the best-fit kite, and all data is permanently deleted when you delete your account.
+            </li>
           </ul>
 
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">How We Use Your Information</h2>
