@@ -8,8 +8,11 @@ import {
   Cloud,
   Navigation,
   Zap,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import bgBanner from "../assets/bg-banner.png";
+import womanKitesurfing from "../assets/skite website assets/woman-kitesurfing.png";
 
 export function Home() {
   const features = [
@@ -63,8 +66,37 @@ export function Home() {
           <div className="absolute inset-0 bg-black/30"></div>
         </div>
 
-        <div className="container-custom relative z-10">
-          <div className="max-w-4xl">
+        {/* Woman Kitesurfer Image */}
+        <div className="absolute inset-0 flex items-center justify-center lg:justify-end lg:pr-20">
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1, delay: 0.3 }}
+            className="relative z-10"
+          >
+            <img
+              src={womanKitesurfing}
+              alt="Woman kitesurfing"
+              className="w-80 h-80 sm:w-96 sm:h-96 lg:w-[600px] lg:h-[600px] xl:w-[700px] xl:h-[700px] object-contain drop-shadow-2xl"
+            />
+          </motion.div>
+        </div>
+
+        {/* Navigation Arrows */}
+        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-30">
+          <button className="w-12 h-12 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center transition-colors">
+            <ChevronLeft className="w-6 h-6 text-white" />
+          </button>
+        </div>
+        
+        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-30">
+          <button className="w-12 h-12 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center transition-colors">
+            <ChevronRight className="w-6 h-6 text-white" />
+          </button>
+        </div>
+
+        <div className="container-custom relative z-20">
+          <div className="max-w-4xl lg:max-w-2xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -72,9 +104,9 @@ export function Home() {
               className="text-left"
             >
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
-                Fly Smarter With
+                Fly Smarter
                 <span className="text-blue-400 block">
-                  S-Kite
+                  With S-Kite
                 </span>
               </h1>
               <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-6 sm:mb-8 max-w-2xl leading-relaxed">
@@ -85,7 +117,7 @@ export function Home() {
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-start">
                 <Link
                   to="/signup"
-                  className="btn-primary inline-flex items-center justify-center bg-white text-gray-900 hover:bg-gray-100 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-lg"
+                  className="btn-primary inline-flex items-center justify-center bg-blue-600 text-white hover:bg-blue-700 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-lg"
                 >
                   Get Started
                   <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
