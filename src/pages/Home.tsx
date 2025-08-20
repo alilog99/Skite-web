@@ -77,7 +77,7 @@ export function Home() {
             <img
               src={womanKitesurfing}
               alt="Woman kitesurfing"
-              className="w-80 h-80 sm:w-96 sm:h-96 lg:w-[600px] lg:h-[600px] xl:w-[700px] xl:h-[700px] object-contain drop-shadow-2xl"
+              className="w-96 h-96 sm:w-[500px] sm:h-[500px] lg:w-[800px] lg:h-[800px] xl:w-[900px] xl:h-[900px] object-contain drop-shadow-2xl"
             />
           </motion.div>
         </div>
