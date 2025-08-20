@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import bgBanner from "../assets/bg-banner.png";
 import womanKitesurfing from "../assets/skite website assets/woman-kitesurfing.png";
+import manKitesurfing from "../assets/skite website assets/man-kitesurfing.png";
 
 export function Home() {
   const features = [
@@ -278,30 +279,48 @@ export function Home() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="section-padding bg-primary-600 dark:bg-primary-700">
-        <div className="container-custom text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Ready to fly smarter?
-            </h2>
-            <p className="text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of kitesurfers who trust S-Kite for safer, more
-              informed sessions
-            </p>
-            <Link
-              to="/signup"
-              className="bg-white text-primary-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-all duration-200 inline-flex items-center"
+      {/* Ready to Fly Smarter Section */}
+      <section className="bg-blue-600 py-16 lg:py-20">
+        <div className="container-custom">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="text-white"
             >
-              Start Flying Smarter
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Link>
-          </motion.div>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-left">
+                Ready to fly smarter?
+              </h2>
+              <p className="text-xl text-white/90 mb-8 max-w-2xl text-left">
+                Join thousands of kitesurfers who trust S-Kite for safer, more informed sessions
+              </p>
+              <div className="text-left">
+                <Link
+                  to="/signup"
+                  className="inline-flex items-center justify-center bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-lg transition-colors"
+                >
+                  Start Flying Smarter
+                  <ArrowRight className="ml-2 w-5 h-5" />
+                </Link>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="flex justify-center lg:justify-end"
+            >
+              <img
+                src={manKitesurfing}
+                alt="Male kitesurfer"
+                className="w-80 h-80 lg:w-96 lg:h-96 object-contain drop-shadow-2xl"
+              />
+            </motion.div>
+          </div>
         </div>
       </section>
     </div>
