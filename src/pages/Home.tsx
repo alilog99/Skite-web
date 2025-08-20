@@ -9,7 +9,7 @@ import {
   Navigation,
   Zap,
 } from "lucide-react";
-import headerImage from "../assets/header-img.jpeg";
+import bgBanner from "../assets/bg-banner.png";
 
 export function Home() {
   const features = [
@@ -55,12 +55,12 @@ export function Home() {
         {/* Background Image */}
         <div className="absolute inset-0">
           <img
-            src={headerImage}
+            src={bgBanner}
             alt="Kitesurfing background"
-            className="hero-image"
+            className="w-full h-full object-cover"
           />
           {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-black/40 sm:bg-black/30"></div>
+          <div className="absolute inset-0 bg-black/30"></div>
         </div>
 
         <div className="container-custom relative z-10">
@@ -73,8 +73,7 @@ export function Home() {
             >
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
                 Fly Smarter With
-                <span className="text-primary-300 block sm:inline">
-                  {" "}
+                <span className="text-blue-400 block">
                   S-Kite
                 </span>
               </h1>
@@ -86,14 +85,14 @@ export function Home() {
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-start">
                 <Link
                   to="/signup"
-                  className="btn-primary inline-flex items-center justify-center bg-white text-primary-600 hover:bg-gray-100 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold"
+                  className="btn-primary inline-flex items-center justify-center bg-white text-gray-900 hover:bg-gray-100 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-lg"
                 >
                   Get Started
                   <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                 </Link>
                 <Link
                   to="/features"
-                  className="btn-secondary inline-flex items-center justify-center border-2 border-white text-primary-600 bg-white hover:bg-gray-100 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold"
+                  className="btn-secondary inline-flex items-center justify-center border-2 border-white text-white bg-transparent hover:bg-white hover:text-gray-900 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-lg transition-colors"
                 >
                   Learn More
                   <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
