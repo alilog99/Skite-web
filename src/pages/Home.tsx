@@ -95,7 +95,7 @@ export function Home() {
           </button>
         </div>
 
-        <div className="container-custom relative z-20">
+        <div className="container-custom relative z-20 flex justify-start">
           <div className="max-w-4xl lg:max-w-2xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
