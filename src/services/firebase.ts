@@ -75,6 +75,20 @@ export const signUpWithEmailAndPassword = async (
     }
   } catch (error: any) {
     console.error('Error during signup:', error)
+    console.error('Error code:', error.code)
+    console.error('Error message:', error.message)
+    
+    // Add more specific error handling
+    if (error.code === 'auth/email-already-in-use') {
+      throw new Error('An account with this email already exists. Please sign in instead.')
+    } else if (error.code === 'auth/weak-password') {
+      throw new Error('Password should be at least 6 characters long.')
+    } else if (error.code === 'auth/invalid-email') {
+      throw new Error('Please enter a valid email address.')
+    } else if (error.code === 'auth/network-request-failed') {
+      throw new Error('Network error. Please check your internet connection and try again.')
+    }
+    
     throw error
   }
 }
@@ -82,9 +96,30 @@ export const signUpWithEmailAndPassword = async (
 // Sign in function
 export const signInWithEmailAndPassword = async (email: string, password: string): Promise<UserCredential> => {
   try {
-    return await firebaseSignInWithEmailAndPassword(auth, email, password)
+    console.log('Attempting sign in with email:', email)
+    console.log('Auth instance available:', !!auth)
+    const result = await firebaseSignInWithEmailAndPassword(auth, email, password)
+    console.log('Sign in successful:', result.user.uid)
+    return result
   } catch (error: any) {
     console.error('Error during signin:', error)
+    console.error('Error code:', error.code)
+    console.error('Error message:', error.message)
+    console.error('Full error object:', error)
+    
+    // Add more specific error handling
+    if (error.code === 'auth/invalid-credential') {
+      throw new Error('Invalid email or password. Please check your credentials and try again.')
+    } else if (error.code === 'auth/user-not-found') {
+      throw new Error('No account found with this email address. Please sign up first.')
+    } else if (error.code === 'auth/wrong-password') {
+      throw new Error('Incorrect password. Please try again.')
+    } else if (error.code === 'auth/too-many-requests') {
+      throw new Error('Too many failed login attempts. Please try again later.')
+    } else if (error.code === 'auth/network-request-failed') {
+      throw new Error('Network error. Please check your internet connection and try again.')
+    }
+    
     throw error
   }
 }

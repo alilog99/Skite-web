@@ -115,9 +115,10 @@ export function Signup() {
     } catch (error: any) {
       console.error('Signup error:', error)
       
-      // Handle specific Firebase auth errors
-      let errorMessage = 'An error occurred during signup'
+      // Use the error message from the service if available, otherwise use a generic message
+      let errorMessage = error.message || 'An error occurred during signup'
       
+      // Handle specific Firebase auth errors if the service didn't already handle them
       if (error.code === 'auth/email-already-in-use') {
         errorMessage = 'An account with this email already exists. Please sign in instead.'
       } else if (error.code === 'auth/weak-password') {
