@@ -251,18 +251,23 @@ export const getCredits = async (uid: string): Promise<number> => {
 // Smart auth helper functions for cross-platform compatibility
 export const handleExistingUserSignup = async (email: string, password: string): Promise<{ success: boolean; message: string; shouldLogin: boolean }> => {
   try {
+    console.log('Checking if user exists with email:', email)
     // Try to sign in with the email/password to see if account exists
     await firebaseSignInWithEmailAndPassword(auth, email, password)
     
     // If successful, the account exists and password is correct
+    console.log('User already exists')
     return {
       success: true,
       message: 'Account already exists. Please sign in instead.',
       shouldLogin: true
     }
   } catch (error: any) {
-    if (error.code === 'auth/user-not-found') {
+    console.log('Error checking existing user:', error.code, error.message)
+    
+    if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
       // Account doesn't exist - safe to proceed with signup
+      console.log('User does not exist, proceeding with signup')
       return {
         success: true,
         message: 'Account does not exist. Proceeding with signup.',
@@ -275,9 +280,21 @@ export const handleExistingUserSignup = async (email: string, password: string):
         message: 'Account already exists with a different password. Please sign in or use "Forgot Password".',
         shouldLogin: true
       }
+    } else if (error.code === 'auth/too-many-requests') {
+      // Too many attempts
+      return {
+        success: false,
+        message: 'Too many attempts. Please try again later.',
+        shouldLogin: false
+      }
     } else {
-      // Other error
-      throw error
+      // Other error - don't block signup
+      console.log('Unknown error during user check, proceeding with signup anyway')
+      return {
+        success: true,
+        message: 'Unable to verify existing user. Proceeding with signup.',
+        shouldLogin: false
+      }
     }
   }
 }
