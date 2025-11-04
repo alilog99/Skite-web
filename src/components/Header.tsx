@@ -1,17 +1,11 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Sun, Moon, LogOut, User } from 'lucide-react'
 import { useTheme } from './ThemeProvider'
 import { useAuth } from '../contexts/AuthContext'
 import { signOutUser } from '../services/firebase'
 import skiteLogo from '../assets/logo/SKite-Logo-Source.svg'
-// Original image not needed - using responsive srcSet versions
-import womanKitesurfing640 from '../assets/skite website assets/images/woman-kitesurfing-640.png'
-import womanKitesurfing960 from '../assets/skite website assets/images/woman-kitesurfing-960.png'
-import womanKitesurfing1280 from '../assets/skite website assets/images/woman-kitesurfing-1280.png'
-import womanKitesurfing1920 from '../assets/skite website assets/images/woman-kitesurfing-1920.png'
-// Using responsive srcSet for optimal image loading
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -19,8 +13,6 @@ export function Header() {
   const { theme, setTheme } = useTheme()
   const { currentUser, userData } = useAuth()
   const navigate = useNavigate()
-
-  // Header uses srcSet for responsive images (see img element below)
 
   const handleLogout = async () => {
     setIsLoggingOut(true)
@@ -51,173 +43,209 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 relative overflow-hidden">
-      {/* ✅ Background Image (Responsive Fix) */}
-      <div className="header-bg-image absolute inset-0 opacity-10 dark:opacity-5 overflow-hidden">
-        
-      <img
-  src={womanKitesurfing1280}
-  srcSet={`
-    ${womanKitesurfing640} 640w,
-    ${womanKitesurfing960} 960w,
-    ${womanKitesurfing1280} 1280w,
-    ${womanKitesurfing1920} 1920w
-  `}
-  sizes="100vw"
-  alt="Woman kitesurfing"
-  className="kitesurfing-image"
-/>
-
-        {/* Header uses responsive srcSet - mobile images load automatically */}
-        <div className="absolute inset-0 bg-white/20 dark:bg-gray-900/30"></div>
-      </div>
-
-      {/* Content */}
+    <header className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800 shadow-sm transition-all duration-300">
+      {/* Professional subtle gradient */}
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-50/30 via-transparent to-cyan-50/20 dark:from-blue-900/5 dark:via-transparent dark:to-cyan-900/5"></div>
+      
       <div className="container-custom relative z-10">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link to="/" className="flex items-center">
-            <img
-              src={skiteLogo}
-              alt="S-Kite Logo"
-              className="h-8 w-auto dark:invert"
-            />
-          </Link>
+        <div className="flex items-center justify-between h-20">
+          {/* Logo Section */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex items-center"
+          >
+            <Link to="/" className="flex items-center group">
+              <div className="relative">
+                <img 
+                  src={skiteLogo} 
+                  alt="S-Kite Logo" 
+                  className="h-10 w-auto dark:invert transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute -inset-2 bg-blue-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+            </Link>
+          </motion.div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            {navigation.map((item) => (
-              <Link
+          <nav className="hidden lg:flex items-center space-x-1">
+            {navigation.map((item, index) => (
+              <motion.div
                 key={item.name}
-                to={item.href}
-                className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                {item.name}
-              </Link>
+                <Link
+                  to={item.href}
+                  className="relative px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 group"
+                >
+                  {item.name}
+                  <div className="absolute bottom-0 left-1/2 w-0 h-0.5 bg-blue-600 dark:bg-blue-400 transition-all duration-300 group-hover:w-full group-hover:left-0"></div>
+                </Link>
+              </motion.div>
             ))}
           </nav>
 
-          {/* Actions */}
-          <div className="flex items-center space-x-4">
+          {/* Right Side Actions */}
+          <div className="flex items-center space-x-3">
             {/* Theme Toggle */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={toggleTheme}
-              className="p-2 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200"
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+              aria-label="Toggle theme"
             >
               {theme === 'dark' ? (
-                <Sun className="w-5 h-5" />
+                <Sun className="h-5 w-5 text-yellow-500" />
               ) : (
-                <Moon className="w-5 h-5" />
+                <Moon className="h-5 w-5 text-gray-600" />
               )}
-            </button>
+            </motion.button>
 
-            {/* Auth Buttons */}
-            <div className="hidden md:flex items-center space-x-3">
-              {currentUser ? (
-                <>
-                  <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
-                    <User className="w-4 h-4" />
-                    <span className="text-sm">
-                      Hi, {userData?.fullName || currentUser.email?.split('@')[0] || 'User'}
-                    </span>
+            {/* User Actions */}
+            {currentUser ? (
+              <div className="hidden md:flex items-center space-x-3">
+                <div className="flex items-center space-x-2 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                    <User className="h-4 w-4 text-white" />
                   </div>
-                  <button
-                    onClick={handleLogout}
-                    disabled={isLoggingOut}
-                    className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200 disabled:opacity-50"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    <span>Logout</span>
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/login"
-                    className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200"
-                  >
-                    Sign in
-                  </Link>
-                  <Link to="/signup" className="btn-primary">
-                    Get Started
-                  </Link>
-                </>
-              )}
-            </div>
+                  <div className="text-sm">
+                    <p className="font-medium text-gray-900 dark:text-white">
+                      {currentUser?.email?.split('@')[0] || 'User'}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">
+                      {userData?.email}
+                    </p>
+                  </div>
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={handleLogout}
+                  disabled={isLoggingOut}
+                  className="p-2 rounded-lg bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors duration-200 text-red-600 dark:text-red-400"
+                  aria-label="Sign out"
+                >
+                  <LogOut className="h-5 w-5" />
+                </motion.button>
+              </div>
+            ) : (
+              <div className="hidden md:flex items-center space-x-3">
+                <Link
+                  to="/login"
+                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-6 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white text-sm font-medium rounded-lg transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
+                >
+                  Get Started
+                </Link>
+              </div>
+            )}
 
             {/* Mobile Menu Button */}
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200"
+              className="lg:hidden p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+              aria-label="Toggle menu"
             >
-              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+              {isMenuOpen ? (
+                <X className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+              ) : (
+                <Menu className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+              )}
+            </motion.button>
           </div>
         </div>
+      </div>
 
-        {/* Mobile Navigation */}
+      {/* Mobile Menu */}
+      <AnimatePresence>
         {isMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-gray-200 dark:border-gray-700"
+            transition={{ duration: 0.3 }}
+            className="lg:hidden bg-white/98 dark:bg-gray-900/98 backdrop-blur-xl border-t border-gray-100 dark:border-gray-800"
           >
-            <nav className="py-4 space-y-4">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  to={item.href}
-                  className="block text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.name}
-                </Link>
-              ))}
-              <div className="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-3">
+            <div className="container-custom py-6">
+              <nav className="space-y-2">
+                {navigation.map((item, index) => (
+                  <motion.div
+                    key={item.name}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                  >
+                    <Link
+                      to={item.href}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block px-4 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors duration-200"
+                    >
+                      {item.name}
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
+
+              {/* Mobile User Actions */}
+              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                 {currentUser ? (
-                  <>
-                    <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 mb-3">
-                      <User className="w-4 h-4" />
-                      <span className="text-sm">
-                        Hi, {userData?.fullName || currentUser.email?.split('@')[0] || 'User'}
-                      </span>
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-3 px-4 py-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                      <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                        <User className="h-5 w-5 text-white" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 dark:text-white">
+                          {currentUser?.email?.split('@')[0] || 'User'}
+                        </p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                          {userData?.email}
+                        </p>
+                      </div>
                     </div>
                     <button
-                      onClick={() => {
-                        handleLogout()
-                        setIsMenuOpen(false)
-                      }}
+                      onClick={handleLogout}
                       disabled={isLoggingOut}
-                      className="flex items-center space-x-2 text-gray-600 dark:text-gray-300 hover:text-red-600 dark:hover:text-red-400 transition-colors duration-200 disabled:opacity-50"
+                      className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg transition-colors duration-200"
                     >
-                      <LogOut className="w-4 h-4" />
-                      <span>Logout</span>
+                      <LogOut className="h-5 w-5" />
+                      <span>Sign Out</span>
                     </button>
-                  </>
+                  </div>
                 ) : (
-                  <>
+                  <div className="space-y-3">
                     <Link
                       to="/login"
-                      className="block text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200"
                       onClick={() => setIsMenuOpen(false)}
+                      className="block w-full text-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors duration-200"
                     >
-                      Sign in
+                      Sign In
                     </Link>
                     <Link
                       to="/signup"
-                      className="inline-flex btn-primary"
                       onClick={() => setIsMenuOpen(false)}
+                      className="block w-full text-center px-4 py-3 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-medium rounded-lg transition-all duration-200"
                     >
                       Get Started
                     </Link>
-                  </>
+                  </div>
                 )}
               </div>
-            </nav>
+            </div>
           </motion.div>
         )}
-      </div>
+      </AnimatePresence>
     </header>
   )
 }
