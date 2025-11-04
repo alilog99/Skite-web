@@ -5,8 +5,22 @@ import { Eye, EyeOff, Mail, Lock, User, Scale, Award } from 'lucide-react'
 import { signUpWithEmailAndPassword, handleExistingUserSignup } from '../services/firebase'
 import skiteLogo from '../assets/logo/SKite-Logo-Source.svg'
 
+interface FormData {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  weight: string;
+  experienceLevel: string;
+  termsAndConditions: boolean;
+}
+
+interface FormErrors {
+  [key: string]: string;
+}
+
 export function Signup() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
     password: '',
@@ -18,12 +32,18 @@ export function Signup() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [errors, setErrors] = useState<Record<string, string>>({})
+  const [errors, setErrors] = useState<FormErrors>({})
   const navigate = useNavigate()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    const { name, value, type } = e.target
+    const checked = (e.target as HTMLInputElement).checked
+    
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: type === 'checkbox' ? checked : value 
+    }))
+    
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }))
@@ -31,7 +51,7 @@ export function Signup() {
   }
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {}
+    const newErrors: FormErrors = {}
 
     if (!formData.name.trim()) {
       newErrors.name = 'Full name is required'

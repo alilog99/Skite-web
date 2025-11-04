@@ -78,7 +78,7 @@ export const stripeWebhook = functions.https.onRequest((req, res) => {
   const sig = req.headers['stripe-signature']
   const endpointSecret = functions.config().stripe.webhook_secret
 
-  let event: Stripe.Event
+  let event
 
   try {
     event = stripe.webhooks.constructEvent(req.rawBody, sig as string, endpointSecret)
@@ -91,10 +91,11 @@ export const stripeWebhook = functions.https.onRequest((req, res) => {
 
   // Handle the event
   switch (event.type) {
-    case 'checkout.session.completed':
+    case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session
       handleCheckoutSessionCompleted(session)
       break
+    }
     default:
       console.log(`Unhandled event type ${event.type}`)
   }

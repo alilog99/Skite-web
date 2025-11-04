@@ -18,6 +18,7 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,css,md}\"",
     "start": "yarn dev",
     "deploy:build": "yarn clean && yarn type-check && yarn lint && yarn build",
+    "deploy:quick": "yarn clean && yarn build",
     "functions:dev": "cd functions && yarn build:watch",
     "functions:build": "cd functions && yarn build",
     "functions:clean": "cd functions && rimraf lib node_modules && yarn install"
