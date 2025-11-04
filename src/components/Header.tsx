@@ -6,6 +6,7 @@ import { useTheme } from './ThemeProvider'
 import { useAuth } from '../contexts/AuthContext'
 import { signOutUser } from '../services/firebase'
 import skiteLogo from '../assets/logo/SKite-Logo-Source.svg'
+import womanKitesurfing from '../assets/skite website assets/woman-kitesurfing.png'
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -43,8 +44,23 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700">
-      <div className="container-custom">
+    <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 relative overflow-hidden">
+      {/* Background Image */}
+      <div className="header-bg-image absolute inset-0 opacity-10 dark:opacity-5">
+        <img
+          src={womanKitesurfing}
+          alt=""
+          className="w-full h-full object-cover object-right"
+          style={{
+            transform: 'scale(1.1) translateX(10px)',
+            filter: 'blur(1px) brightness(1.1)'
+          }}
+        />
+        {/* Additional overlay for better text contrast */}
+        <div className="absolute inset-0 bg-white/20 dark:bg-gray-900/30"></div>
+      </div>
+      
+      <div className="container-custom relative z-10">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center">

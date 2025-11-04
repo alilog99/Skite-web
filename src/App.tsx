@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './components/ThemeProvider';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { ScrollToTop } from './components/ScrollToTop';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { Home } from './pages/Home';
@@ -19,6 +20,7 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
+        <ScrollToTop />
         <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
           <Header />
           <main>

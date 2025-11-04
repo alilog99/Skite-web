@@ -33,15 +33,113 @@
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  /* Additional responsive utilities for banner */
-  .hero-image {
-    @apply w-full h-full object-cover;
-    object-position: center center;
+  /* Additional responsive utilities for banner - kept for potential future use */
+
+  /* Hero section background image responsive styles */
+  .hero-section {
+    background-attachment: scroll;
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 100vh;
   }
 
-  @media (max-width: 640px) {
-    .hero-image {
-      object-position: center 30%;
+  /* Desktop - optimal positioning for large screens */
+  @media (min-width: 1024px) {
+    .hero-section {
+      background-position: center right !important;
+    }
+  }
+
+  /* Large tablets and small desktops */
+  @media (max-width: 1023px) and (min-width: 769px) {
+    .hero-section {
+      background-position: 55% center !important;
+    }
+  }
+
+  /* Tablets - balance between text and image */
+  @media (max-width: 768px) and (min-width: 481px) {
+    .hero-section {
+      background-position: 60% center !important;
+      min-height: 90vh;
+    }
+  }
+
+  /* Mobile - keep the girl centered and visible */
+  @media (max-width: 480px) {
+    .hero-section {
+      background-position: 68% center !important;
+      min-height: 85vh;
+    }
+  }
+
+  /* Very small mobile screens - fine-tune positioning */
+  @media (max-width: 320px) {
+    .hero-section {
+      background-position: 72% center !important;
+      min-height: 80vh;
+    }
+  }
+
+  /* Hero content responsive adjustments */
+  .hero-content {
+    max-width: 100%;
+    padding-right: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero-content {
+      max-width: 85%;
+      padding-right: 0.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .hero-content {
+      max-width: 90%;
+      padding-right: 0;
+    }
+    
+    /* Ensure text doesn't overlap with background image on mobile */
+    .hero-section .container-custom {
+      padding-left: 1rem;
+      padding-right: 0.5rem;
+    }
+  }
+
+  /* Extra small screens - optimize text positioning */
+  @media (max-width: 375px) {
+    .hero-content {
+      max-width: 95%;
+    }
+    
+    .hero-section .container-custom {
+      padding-left: 0.75rem;
+      padding-right: 0.25rem;
+    }
+  }
+
+  /* Improve gradient overlay for better mobile readability */
+  @media (max-width: 768px) {
+    .hero-section .bg-gradient-to-r {
+      background: linear-gradient(to right, rgba(0,0,0,0.75), rgba(0,0,0,0.5), rgba(0,0,0,0.15)) !important;
+    }
+  }
+
+  /* Header background image styles */
+  .header-bg-image {
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  /* Adjust header background opacity on hover */
+  header:hover .header-bg-image {
+    opacity: 0.15;
+  }
+
+  /* Mobile header background adjustments */
+  @media (max-width: 768px) {
+    .header-bg-image {
+      opacity: 0.05 !important;
     }
   }
 }

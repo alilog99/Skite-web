@@ -8,10 +8,7 @@ import {
   Cloud,
   Navigation,
   Zap,
-  ChevronLeft,
-  ChevronRight,
 } from "lucide-react";
-import bgBanner from "../assets/bg-banner.png";
 import womanKitesurfing from "../assets/skite website assets/woman-kitesurfing.png";
 import manKitesurfing from "../assets/skite website assets/man-kitesurfing.png";
 
@@ -55,77 +52,48 @@ export function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-screen sm:min-h-screen flex items-center overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <img
-            src={bgBanner}
-            alt="Kitesurfing background"
-            className="w-full h-full object-cover"
-          />
-          {/* Overlay for better text readability */}
-          <div className="absolute inset-0 bg-black/30"></div>
-        </div>
-
-        {/* Woman Kitesurfer Image */}
-        <div className="absolute inset-0 flex items-center justify-center lg:justify-end lg:pr-20">
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 1, delay: 0.3 }}
-            className="relative z-10"
-          >
-            <img
-              src={womanKitesurfing}
-              alt="Woman kitesurfing"
-              className="w-96 h-96 sm:w-[500px] sm:h-[500px] lg:w-[800px] lg:h-[800px] xl:w-[900px] xl:h-[900px] object-contain drop-shadow-2xl"
-            />
-          </motion.div>
-        </div>
-
-        {/* Navigation Arrows */}
-        <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-30">
-          <button className="w-12 h-12 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center transition-colors">
-            <ChevronLeft className="w-6 h-6 text-white" />
-          </button>
-        </div>
-        
-        <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-30">
-          <button className="w-12 h-12 bg-black/50 hover:bg-black/70 rounded-full flex items-center justify-center transition-colors">
-            <ChevronRight className="w-6 h-6 text-white" />
-          </button>
-        </div>
+      <section 
+        className="hero-section relative min-h-screen flex items-center overflow-hidden"
+        style={{
+          backgroundImage: `url(${womanKitesurfing})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center right',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        {/* Overlay for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/20"></div>
 
         <div className="container-custom relative z-20 flex justify-start">
-          <div className="max-w-4xl lg:max-w-2xl">
+          <div className="hero-content max-w-4xl lg:max-w-2xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               className="text-left"
             >
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 sm:mb-6 leading-tight">
+              <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 md:mb-6 leading-tight">
                 Fly Smarter
                 <span className="text-blue-400 block">
                   With S-Kite
                 </span>
               </h1>
-              <p className="text-lg sm:text-xl md:text-2xl text-white/90 mb-6 sm:mb-8 max-w-2xl leading-relaxed">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-5 sm:mb-6 md:mb-8 max-w-xl md:max-w-2xl leading-relaxed">
                 S-Kite helps you choose the right kite size and evaluate weather
                 conditions based on your skill, weight, and location. Make
                 safer, smarter decisions on the water.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-start">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-start max-w-md sm:max-w-none">
                 <Link
                   to="/signup"
-                  className="btn-primary inline-flex items-center justify-center bg-blue-600 text-white hover:bg-blue-700 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-lg"
+                  className="btn-primary inline-flex items-center justify-center bg-blue-600 text-white hover:bg-blue-700 px-5 py-3 sm:px-8 sm:py-4 text-sm sm:text-base md:text-lg font-semibold rounded-lg transition-all duration-200"
                 >
                   Get Started
                   <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                 </Link>
                 <Link
                   to="/features"
-                  className="btn-secondary inline-flex items-center justify-center border-2 border-white text-white bg-transparent hover:bg-white hover:text-gray-900 px-6 py-3 sm:px-8 sm:py-4 text-base sm:text-lg font-semibold rounded-lg transition-colors"
+                  className="btn-secondary inline-flex items-center justify-center border-2 border-white text-white bg-transparent hover:bg-white hover:text-gray-900 px-5 py-3 sm:px-8 sm:py-4 text-sm sm:text-base md:text-lg font-semibold rounded-lg transition-colors"
                 >
                   Learn More
                   <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
