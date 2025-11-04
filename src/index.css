@@ -5,6 +5,9 @@
 /* Import custom responsive image styles */
 @import './styles/responsive-image.css';
 
+/* Import amazing animations */
+@import './styles/animations.css';
+
 @layer base {
   html {
     scroll-behavior: smooth;

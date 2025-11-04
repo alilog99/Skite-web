@@ -9,11 +9,16 @@ import {
   Navigation,
 } from "lucide-react";
 import manKitesurfing from "../assets/skite website assets/man-kitesurfing.png";
+import { useScrollAnimation } from "../hooks/useScrollAnimation";
 // Responsive images now handled by <picture> element with srcSet
 
 
 export function Home() {
-  // Responsive images now handled by <picture> element with srcSet in JSX
+  // Scroll animation hooks for different sections
+  const featuresAnimation = useScrollAnimation();
+  const benefitsAnimation = useScrollAnimation();
+  const ctaAnimation = useScrollAnimation();
+  const statsAnimation = useScrollAnimation();
 
   const features = [
     {
@@ -82,52 +87,41 @@ export function Home() {
   {/* Hero text & buttons */}
   <div className="container-custom relative z-10 flex justify-start">
           <div className="hero-content max-w-4xl lg:max-w-2xl">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-left"
-            >
-              <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 md:mb-6 leading-tight">
-                Fly Smarter
-          <span className="text-blue-400 block">With S-Kite</span>
+            <div className="text-left">
+              <h1 className="hero-title text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 md:mb-6 leading-tight">
+                <span className="text-gradient-animate">Fly Smarter</span>
+                <span className="text-blue-400 block animate-fade-in-left animate-delay-300">With S-Kite</span>
               </h1>
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-5 sm:mb-6 md:mb-8 max-w-xl md:max-w-2xl leading-relaxed">
+              <p className="hero-description text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-5 sm:mb-6 md:mb-8 max-w-xl md:max-w-2xl leading-relaxed">
                 S-Kite helps you choose the right kite size and evaluate weather
-          conditions based on your skill, weight, and location. Make safer,
-          smarter decisions on the water.
+                conditions based on your skill, weight, and location. Make safer,
+                smarter decisions on the water.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-start max-w-md sm:max-w-none">
+              <div className="hero-buttons flex flex-col sm:flex-row gap-3 sm:gap-4 justify-start max-w-md sm:max-w-none">
                 <Link
                   to="/signup"
-            className="btn-primary text-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+                  className="btn-animate btn-primary text-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg hover-glow animate-pulse group"
                 >
-            Get Started Free
-            <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 inline" />
+                  Get Started Free
+                  <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 inline transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
                 <Link
                   to="/features"
-            className="btn-secondary text-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg transition-all duration-300 hover:scale-105"
+                  className="btn-animate btn-secondary text-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg hover-lift"
                 >
                   Learn More
                 </Link>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
 
       {/* Features Section */}
-      <section className="py-16 md:py-24 bg-white dark:bg-gray-900">
+      <section ref={featuresAnimation.ref} className="py-16 md:py-24 bg-white dark:bg-gray-900">
         <div className="container-custom">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
-            className="text-center mb-12 md:mb-16"
-          >
+          <div className={`text-center mb-12 md:mb-16 ${featuresAnimation.isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Why Choose S-Kite?
             </h2>
@@ -135,19 +129,19 @@ export function Home() {
               Advanced technology meets kitesurfing expertise to keep you safe
               and maximize your time on the water.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {features.map((feature, index) => (
-              <motion.div
+              <div
                 key={feature.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="text-center p-6 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
+                className={`card-hover text-center p-6 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 ${
+                  featuresAnimation.isVisible 
+                    ? `animate-fade-in-up animate-delay-${Math.min((index + 1) * 100, 800)}` 
+                    : 'opacity-0'
+                }`}
               >
-                <div className="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 rounded-lg mb-4">
+                <div className="card-icon inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 rounded-lg mb-4 animate-float">
                   <feature.icon className="h-6 w-6 md:h-8 md:w-8" />
                 </div>
                 <h3 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-2">
@@ -156,22 +150,17 @@ export function Home() {
                 <p className="text-gray-600 dark:text-gray-300">
                   {feature.description}
                 </p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Benefits Section */}
-      <section className="py-16 md:py-24 bg-gray-50 dark:bg-gray-800">
+      <section ref={benefitsAnimation.ref} className="py-16 md:py-24 bg-gray-50 dark:bg-gray-800">
         <div className="container-custom">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
+            <div className={`${benefitsAnimation.isVisible ? 'animate-fade-in-left' : 'opacity-0'}`}>
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
                 Everything You Need for Safe Kitesurfing
               </h2>
@@ -196,7 +185,7 @@ export function Home() {
                   </motion.div>
                 ))}
               </div>
-            </motion.div>
+            </div>
 
             <motion.div
               initial={{ opacity: 0, x: 20 }}
@@ -217,7 +206,7 @@ export function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-primary-600 dark:bg-primary-700">
+      <section ref={ctaAnimation.ref} className="py-16 md:py-24 bg-primary-600 dark:bg-primary-700">
         <div className="container-custom text-center">
             <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -252,7 +241,7 @@ export function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 md:py-24 bg-white dark:bg-gray-900">
+      <section ref={statsAnimation.ref} className="py-16 md:py-24 bg-white dark:bg-gray-900">
         <div className="container-custom">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
