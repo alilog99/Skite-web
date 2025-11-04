@@ -61,7 +61,7 @@ export function Home() {
           backgroundRepeat: 'no-repeat'
         }}
       >
-        {/* Overlay for better text readability */}
+          {/* Overlay for better text readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/20"></div>
 
         <div className="container-custom relative z-20 flex justify-start">
