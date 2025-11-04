@@ -7,12 +7,14 @@ import {
   CheckCircle,
   Cloud,
   Navigation,
-  Zap,
 } from "lucide-react";
-import womanKitesurfing from "../assets/skite website assets/woman-kitesurfing.png";
 import manKitesurfing from "../assets/skite website assets/man-kitesurfing.png";
+// Responsive images now handled by <picture> element with srcSet
+
 
 export function Home() {
+  // Responsive images now handled by <picture> element with srcSet in JSX
+
   const features = [
     {
       icon: Cloud,
@@ -44,7 +46,7 @@ export function Home() {
     "Choose the right kite size for any conditions",
     "Get real-time wind and weather updates",
     "Assess risks before hitting the water",
-    "Save multiple rider profiles",
+    "Find the best kitesurfing spots near you",
     "Offline forecast access",
     "Multi-language and unit system support",
   ];
@@ -52,19 +54,33 @@ export function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section 
-        className="hero-section relative min-h-screen flex items-center overflow-hidden"
-        style={{
-          backgroundImage: `url(${womanKitesurfing})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center right',
-          backgroundRepeat: 'no-repeat'
-        }}
-      >
-          {/* Overlay for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/20"></div>
+      <section className="hero-section relative min-h-screen flex items-center overflow-hidden">
+  {/* ✅ Responsive hero background image */}
+  <picture>
+    <source
+      media="(max-width: 640px)"
+      srcSet="/src/assets/skite website assets/images/woman-kitesurfing-640.png"
+    />
+    <source
+      media="(max-width: 960px)"
+      srcSet="/src/assets/skite website assets/images/woman-kitesurfing-960.png"
+    />
+    <source
+      media="(max-width: 1280px)"
+      srcSet="/src/assets/skite website assets/images/woman-kitesurfing-1280.png"
+    />
+    <img
+      src="/src/assets/skite website assets/images/woman-kitesurfing-1920.png"
+      alt="Woman kitesurfing"
+      className="kitesurfing-image"
+    />
+  </picture>
 
-        <div className="container-custom relative z-20 flex justify-start">
+  {/* Overlay for better text contrast */}
+  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/20 z-[0]"></div>
+
+  {/* Hero text & buttons */}
+  <div className="container-custom relative z-10 flex justify-start">
           <div className="hero-content max-w-4xl lg:max-w-2xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -74,29 +90,26 @@ export function Home() {
             >
               <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 md:mb-6 leading-tight">
                 Fly Smarter
-                <span className="text-blue-400 block">
-                  With S-Kite
-                </span>
+          <span className="text-blue-400 block">With S-Kite</span>
               </h1>
               <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-5 sm:mb-6 md:mb-8 max-w-xl md:max-w-2xl leading-relaxed">
                 S-Kite helps you choose the right kite size and evaluate weather
-                conditions based on your skill, weight, and location. Make
-                safer, smarter decisions on the water.
+          conditions based on your skill, weight, and location. Make safer,
+          smarter decisions on the water.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-start max-w-md sm:max-w-none">
                 <Link
                   to="/signup"
-                  className="btn-primary inline-flex items-center justify-center bg-blue-600 text-white hover:bg-blue-700 px-5 py-3 sm:px-8 sm:py-4 text-sm sm:text-base md:text-lg font-semibold rounded-lg transition-all duration-200"
+            className="btn-primary text-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
                 >
-                  Get Started
-                  <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
+            Get Started Free
+            <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 inline" />
                 </Link>
                 <Link
                   to="/features"
-                  className="btn-secondary inline-flex items-center justify-center border-2 border-white text-white bg-transparent hover:bg-white hover:text-gray-900 px-5 py-3 sm:px-8 sm:py-4 text-sm sm:text-base md:text-lg font-semibold rounded-lg transition-colors"
+            className="btn-secondary text-center px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg font-semibold rounded-lg transition-all duration-300 hover:scale-105"
                 >
                   Learn More
-                  <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5" />
                 </Link>
               </div>
             </motion.div>
@@ -104,39 +117,40 @@ export function Home() {
         </div>
       </section>
 
+
       {/* Features Section */}
-      <section className="section-padding">
+      <section className="py-16 md:py-24 bg-white dark:bg-gray-900">
         <div className="container-custom">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-12 md:mb-16"
           >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Why Choose S-Kite?
             </h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-              Built specifically for kitesurfers and windsurfers with advanced
-              weather analysis
+            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              Advanced technology meets kitesurfing expertise to keep you safe
+              and maximize your time on the water.
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {features.map((feature, index) => (
               <motion.div
                 key={feature.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="card text-center"
+                className="text-center p-6 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
               >
-                <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <feature.icon className="w-6 h-6 text-primary-600 dark:text-primary-400" />
+                <div className="inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 rounded-lg mb-4">
+                  <feature.icon className="h-6 w-6 md:h-8 md:w-8" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                <h3 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white mb-2">
                   {feature.title}
                 </h3>
                 <p className="text-gray-600 dark:text-gray-300">
@@ -149,34 +163,33 @@ export function Home() {
       </section>
 
       {/* Benefits Section */}
-      <section className="section-padding bg-gray-50 dark:bg-gray-800">
+      <section className="py-16 md:py-24 bg-gray-50 dark:bg-gray-800">
         <div className="container-custom">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">
-                Everything you need for safer sessions
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+                Everything You Need for Safe Kitesurfing
               </h2>
-              <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-                S-Kite provides all the tools you need to make informed
-                decisions on the water, whether you're a beginner or an
-                experienced rider.
+              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8">
+                From beginners to pros, S-Kite provides the tools and insights
+                you need to make every session count.
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-4">
                 {benefits.map((benefit, index) => (
                   <motion.div
                     key={benefit}
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    transition={{ duration: 0.8, delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    className="flex items-center space-x-3"
+                    className="flex items-center"
                   >
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
                     <span className="text-gray-700 dark:text-gray-300">
                       {benefit}
                     </span>
@@ -188,106 +201,82 @@ export function Home() {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+              transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="relative flex justify-center lg:justify-end"
+              className="relative"
             >
-              {/* S-Kite Assistant Card */}
-              <div className="relative w-80 h-80 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-2xl shadow-xl p-6 border border-blue-200 dark:border-blue-800 flex flex-col justify-center">
-                {/* Top Right Corner Icon */}
-                <div className="absolute -top-2 -right-2 w-8 h-8 bg-blue-400 rounded-full flex items-center justify-center shadow-lg">
-                  <CheckCircle className="w-5 h-5 text-white" />
-                </div>
-
-                {/* Bottom Left Corner Icon */}
-                <div className="absolute -bottom-2 -left-2 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center shadow-lg">
-                  <Zap className="w-4 h-4 text-white" />
-                </div>
-
-                <div className="text-center mb-6">
-                  <div className="w-12 h-12 bg-blue-200 dark:bg-blue-700 rounded-lg flex items-center justify-center mx-auto mb-3">
-                    <Wind className="w-6 h-6 text-blue-700 dark:text-blue-300" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                    S-Kite Assistant
-                  </h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    Smart kite recommendations
-                  </p>
-                </div>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600 dark:text-gray-300">
-                      Wind Speed:
-                    </span>
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      18 knots
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600 dark:text-gray-300">
-                      Recommended Kite:
-                    </span>
-                    <span className="font-semibold text-gray-900 dark:text-white">
-                      12m²
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600 dark:text-gray-300">
-                      Risk Level:
-                    </span>
-                    <span className="font-semibold text-green-600 dark:text-green-400">
-                      Low
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <img
+                src={manKitesurfing}
+                alt="Kitesurfer in action"
+                className="rounded-2xl shadow-2xl w-full h-auto"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-2xl"></div>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* Ready to Fly Smarter Section */}
-      <section className="bg-blue-600 py-16 lg:py-20">
-        <div className="container-custom">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+      {/* CTA Section */}
+      <section className="py-16 md:py-24 bg-primary-600 dark:bg-primary-700">
+        <div className="container-custom text-center">
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="text-white"
             >
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-left">
-                Ready to fly smarter?
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+              Ready to Elevate Your Kitesurfing?
               </h2>
-              <p className="text-xl text-white/90 mb-8 max-w-2xl text-left">
-                Join thousands of kitesurfers who trust S-Kite for safer, more informed sessions
+            <p className="text-lg md:text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
+              Join thousands of kitesurfers who trust S-Kite for safer, smarter
+              sessions on the water.
               </p>
-              <div className="text-left">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto sm:max-w-none">
                 <Link
                   to="/signup"
-                  className="inline-flex items-center justify-center bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-lg transition-colors"
-                >
-                  Start Flying Smarter
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                className="bg-white text-primary-600 px-8 py-4 text-lg font-semibold rounded-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                Start Free Trial
+                <ArrowRight className="ml-2 h-5 w-5 inline" />
+              </Link>
+              <Link
+                to="/features"
+                className="border-2 border-white text-white px-8 py-4 text-lg font-semibold rounded-lg hover:bg-white hover:text-primary-600 transition-all duration-300 hover:scale-105"
+              >
+                View Features
                 </Link>
               </div>
             </motion.div>
+        </div>
+      </section>
 
+      {/* Stats Section */}
+      <section className="py-16 md:py-24 bg-white dark:bg-gray-900">
+        <div className="container-custom">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {[
+              { number: "10K+", label: "Active Users" },
+              { number: "50K+", label: "Sessions Analyzed" },
+              { number: "99.9%", label: "Uptime" },
+              { number: "24/7", label: "Support" },
+            ].map((stat, index) => (
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="flex justify-center lg:justify-end"
-            >
-              <img
-                src={manKitesurfing}
-                alt="Male kitesurfer"
-                className="w-80 h-80 lg:w-96 lg:h-96 object-contain drop-shadow-2xl"
-              />
+                className="text-center"
+              >
+                <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-600 dark:text-primary-400 mb-2">
+                  {stat.number}
+                </div>
+                <div className="text-gray-600 dark:text-gray-300 font-medium">
+                  {stat.label}
+                </div>
             </motion.div>
+            ))}
           </div>
         </div>
       </section>

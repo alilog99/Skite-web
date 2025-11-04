@@ -6,7 +6,12 @@ import { useTheme } from './ThemeProvider'
 import { useAuth } from '../contexts/AuthContext'
 import { signOutUser } from '../services/firebase'
 import skiteLogo from '../assets/logo/SKite-Logo-Source.svg'
-import womanKitesurfing from '../assets/skite website assets/woman-kitesurfing.png'
+// Original image not needed - using responsive srcSet versions
+import womanKitesurfing640 from '../assets/skite website assets/images/woman-kitesurfing-640.png'
+import womanKitesurfing960 from '../assets/skite website assets/images/woman-kitesurfing-960.png'
+import womanKitesurfing1280 from '../assets/skite website assets/images/woman-kitesurfing-1280.png'
+import womanKitesurfing1920 from '../assets/skite website assets/images/woman-kitesurfing-1920.png'
+// Using responsive srcSet for optimal image loading
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -14,6 +19,8 @@ export function Header() {
   const { theme, setTheme } = useTheme()
   const { currentUser, userData } = useAuth()
   const navigate = useNavigate()
+
+  // Header uses srcSet for responsive images (see img element below)
 
   const handleLogout = async () => {
     setIsLoggingOut(true)
@@ -35,7 +42,6 @@ export function Header() {
     { name: 'Contact', href: '/contact' },
   ]
 
-  // Add Dashboard only for logged-in users
   if (currentUser) {
     navigation.push({ name: 'Dashboard', href: '/dashboard' })
   }
@@ -46,28 +52,34 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700 relative overflow-hidden">
-      {/* Background Image */}
-      <div className="header-bg-image absolute inset-0 opacity-10 dark:opacity-5">
-        <img
-          src={womanKitesurfing}
-          alt=""
-          className="w-full h-full object-cover object-right"
-          style={{
-            transform: 'scale(1.1) translateX(10px)',
-            filter: 'blur(1px) brightness(1.1)'
-          }}
-        />
-        {/* Additional overlay for better text contrast */}
+      {/* ✅ Background Image (Responsive Fix) */}
+      <div className="header-bg-image absolute inset-0 opacity-10 dark:opacity-5 overflow-hidden">
+        
+      <img
+  src={womanKitesurfing1280}
+  srcSet={`
+    ${womanKitesurfing640} 640w,
+    ${womanKitesurfing960} 960w,
+    ${womanKitesurfing1280} 1280w,
+    ${womanKitesurfing1920} 1920w
+  `}
+  sizes="100vw"
+  alt="Woman kitesurfing"
+  className="kitesurfing-image"
+/>
+
+        {/* Header uses responsive srcSet - mobile images load automatically */}
         <div className="absolute inset-0 bg-white/20 dark:bg-gray-900/30"></div>
       </div>
-      
+
+      {/* Content */}
       <div className="container-custom relative z-10">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <img 
-              src={skiteLogo} 
-              alt="SKite Logo" 
+            <img
+              src={skiteLogo}
+              alt="S-Kite Logo"
               className="h-8 w-auto dark:invert"
             />
           </Link>
@@ -126,10 +138,7 @@ export function Header() {
                   >
                     Sign in
                   </Link>
-                  <Link
-                    to="/signup"
-                    className="btn-primary"
-                  >
+                  <Link to="/signup" className="btn-primary">
                     Get Started
                   </Link>
                 </>
@@ -141,11 +150,7 @@ export function Header() {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="md:hidden p-2 text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors duration-200"
             >
-              {isMenuOpen ? (
-                <X className="w-5 h-5" />
-              ) : (
-                <Menu className="w-5 h-5" />
-              )}
+              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
@@ -215,4 +220,4 @@ export function Header() {
       </div>
     </header>
   )
-} 
+}

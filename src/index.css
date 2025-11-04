@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import custom responsive image styles */
+@import './styles/responsive-image.css';
+
 @layer base {
   html {
     scroll-behavior: smooth;

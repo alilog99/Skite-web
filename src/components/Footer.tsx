@@ -15,9 +15,7 @@ export function Footer() {
       { name: 'About', href: '/about' },
     ],
     support: [
-      { name: 'Help Center', href: '/help' },
       { name: 'Contact', href: '/contact' },
-      { name: 'Status', href: '/status' },
     ],
     legal: [
       { name: 'Privacy', href: '/privacy' },

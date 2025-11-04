@@ -4,7 +4,6 @@ import {
   Shield,
   Target,
   Users,
-  Award,
   Heart,
   Zap,
   Globe,
