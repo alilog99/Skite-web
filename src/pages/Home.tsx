@@ -60,32 +60,12 @@ export function Home() {
     <div className="min-h-screen">
       {/* Hero Section */}
       <section className="hero-section relative min-h-screen flex items-center overflow-hidden">
-  {/* ✅ Responsive hero background image */}
-  <picture>
-    <source
-      media="(max-width: 640px)"
-      srcSet="/src/assets/skite website assets/images/woman-kitesurfing-640.png"
-    />
-    <source
-      media="(max-width: 960px)"
-      srcSet="/src/assets/skite website assets/images/woman-kitesurfing-960.png"
-    />
-    <source
-      media="(max-width: 1280px)"
-      srcSet="/src/assets/skite website assets/images/woman-kitesurfing-1280.png"
-    />
-    <img
-      src="/src/assets/skite website assets/images/woman-kitesurfing-1920.png"
-      alt="Woman kitesurfing"
-      className="kitesurfing-image"
-    />
-  </picture>
+        
+        {/* Overlay for better text contrast */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent z-[1]"></div>
 
-  {/* Overlay for better text contrast */}
-  <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/20 z-[0]"></div>
-
-  {/* Hero text & buttons */}
-  <div className="container-custom relative z-10 flex justify-start">
+        {/* Hero text & buttons */}
+        <div className="container-custom relative z-10 flex justify-start !mr-auto !ml-2">
           <div className="hero-content max-w-4xl lg:max-w-2xl">
             <div className="text-left">
               <h1 className="hero-title text-2xl xs:text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 sm:mb-4 md:mb-6 leading-tight">
@@ -115,6 +95,7 @@ export function Home() {
             </div>
           </div>
         </div>
+
       </section>
 
 
@@ -135,11 +116,10 @@ export function Home() {
             {features.map((feature, index) => (
               <div
                 key={feature.title}
-                className={`card-hover text-center p-6 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 ${
-                  featuresAnimation.isVisible 
-                    ? `animate-fade-in-up animate-delay-${Math.min((index + 1) * 100, 800)}` 
-                    : 'opacity-0'
-                }`}
+                className={`card-hover text-center p-6 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 ${featuresAnimation.isVisible
+                  ? `animate-fade-in-up animate-delay-${Math.min((index + 1) * 100, 800)}`
+                  : 'opacity-0'
+                  }`}
               >
                 <div className="card-icon inline-flex items-center justify-center w-12 h-12 md:w-16 md:h-16 bg-primary-100 dark:bg-primary-900 text-primary-600 dark:text-primary-400 rounded-lg mb-4 animate-float">
                   <feature.icon className="h-6 w-6 md:h-8 md:w-8" />
@@ -208,22 +188,22 @@ export function Home() {
       {/* CTA Section */}
       <section ref={ctaAnimation.ref} className="py-16 md:py-24 bg-primary-600 dark:bg-primary-700">
         <div className="container-custom text-center">
-            <motion.div
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-            >
+            viewport={{ once: true }}
+          >
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
               Ready to Elevate Your Kitesurfing?
-              </h2>
+            </h2>
             <p className="text-lg md:text-xl text-primary-100 mb-8 max-w-2xl mx-auto">
               Join thousands of kitesurfers who trust S-Kite for safer, smarter
               sessions on the water.
-              </p>
+            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto sm:max-w-none">
-                <Link
-                  to="/signup"
+              <Link
+                to="/signup"
                 className="bg-white text-primary-600 px-8 py-4 text-lg font-semibold rounded-lg hover:bg-gray-100 transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl"
               >
                 Start Free Trial
@@ -234,9 +214,9 @@ export function Home() {
                 className="border-2 border-white text-white px-8 py-4 text-lg font-semibold rounded-lg hover:bg-white hover:text-primary-600 transition-all duration-300 hover:scale-105"
               >
                 View Features
-                </Link>
-              </div>
-            </motion.div>
+              </Link>
+            </div>
+          </motion.div>
         </div>
       </section>
 
@@ -250,12 +230,12 @@ export function Home() {
               { number: "99.9%", label: "Uptime" },
               { number: "24/7", label: "Support" },
             ].map((stat, index) => (
-            <motion.div
+              <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
-              viewport={{ once: true }}
+                viewport={{ once: true }}
                 className="text-center"
               >
                 <div className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary-600 dark:text-primary-400 mb-2">
@@ -264,7 +244,7 @@ export function Home() {
                 <div className="text-gray-600 dark:text-gray-300 font-medium">
                   {stat.label}
                 </div>
-            </motion.div>
+              </motion.div>
             ))}
           </div>
         </div>

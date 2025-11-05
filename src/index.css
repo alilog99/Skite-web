@@ -47,43 +47,91 @@
     background-size: cover;
     background-repeat: no-repeat;
     min-height: 100vh;
+    position: relative;
   }
 
-  /* Desktop - optimal positioning for large screens */
-  @media (min-width: 1024px) {
+  /* ===================================
+     RESPONSIVE BACKGROUND IMAGES
+     Different images for different screen sizes
+     =================================== */
+
+  /* Extra small phones (320px and below) */
+  @media screen and (max-width: 320px) {
     .hero-section {
-      background-position: center right !important;
+      background-image: url('/src/assets/skite website assets/images/woman-kitesurfing-640.png');
+      background-position: 95% center;
+      min-height: 80vh;
     }
   }
 
-  /* Large tablets and small desktops */
-  @media (max-width: 1023px) and (min-width: 769px) {
+  /* Small phones (321px - 480px) */
+  @media screen and (min-width: 321px) and (max-width: 480px) {
     .hero-section {
-      background-position: 55% center !important;
-    }
-  }
-
-  /* Tablets - balance between text and image */
-  @media (max-width: 768px) and (min-width: 481px) {
-    .hero-section {
-      background-position: 60% center !important;
-      min-height: 90vh;
-    }
-  }
-
-  /* Mobile - keep the girl centered and visible */
-  @media (max-width: 480px) {
-    .hero-section {
-      background-position: 68% center !important;
+      background-image: url('/src/assets/skite website assets/images/woman-kitesurfing-640.png');
+      background-position: 90% center;
       min-height: 85vh;
     }
   }
 
-  /* Very small mobile screens - fine-tune positioning */
-  @media (max-width: 320px) {
+  /* Large phones (481px - 640px) */
+  @media screen and (min-width: 481px) and (max-width: 640px) {
     .hero-section {
-      background-position: 72% center !important;
-      min-height: 80vh;
+      background-image: url('/src/assets/skite website assets/images/woman-kitesurfing-640.png');
+      background-position: 85% center;
+      min-height: 90vh;
+    }
+  }
+
+  /* Tablets portrait (641px - 768px) */
+  @media screen and (min-width: 641px) and (max-width: 768px) {
+    .hero-section {
+      background-image: url('/src/assets/skite website assets/images/woman-kitesurfing-960.png');
+      background-position: 75% center;
+      min-height: 90vh;
+    }
+  }
+
+  /* Tablets landscape (769px - 960px) */
+  @media screen and (min-width: 769px) and (max-width: 960px) {
+    .hero-section {
+      background-image: url('/src/assets/skite website assets/images/woman-kitesurfing-960.png');
+      background-position: 70% center;
+      min-height: 95vh;
+    }
+  }
+
+  /* Small desktop (961px - 1280px) */
+  @media screen and (min-width: 961px) and (max-width: 1280px) {
+    .hero-section {
+      background-image: url('/src/assets/skite website assets/images/woman-kitesurfing-1280.png');
+      background-position: 65% center;
+      min-height: 100vh;
+    }
+  }
+
+  /* Medium desktop (1281px - 1920px) */
+  @media screen and (min-width: 1281px) and (max-width: 1920px) {
+    .hero-section {
+      background-image: url('/src/assets/skite website assets/images/woman-kitesurfing-1920.png');
+      background-position: right center;
+      min-height: 100vh;
+    }
+  }
+
+  /* Large desktop (1920px and above) */
+  @media screen and (min-width: 1921px) {
+    .hero-section {
+      background-image: url('/src/assets/skite website assets/images/woman-kitesurfing-1920.png');
+      background-position: right center;
+      min-height: 100vh;
+    }
+  }
+
+  /* High DPI displays (Retina, etc.) - Load higher quality images */
+  @media screen and (-webkit-min-device-pixel-ratio: 2) and (max-width: 640px),
+         screen and (min-resolution: 192dpi) and (max-width: 640px) {
+    .hero-section {
+      background-image: url('/src/assets/skite website assets/images/woman-kitesurfing-960.png');
     }
   }
 
